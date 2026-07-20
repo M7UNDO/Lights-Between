@@ -1,0 +1,330 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2827770284783720256
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8955606350500897287}
+  - component: {fileID: 3507576579589366098}
+  m_Layer: 0
+  m_Name: OnboardingManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8955606350500897287
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2827770284783720256}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7764041470492163401}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3507576579589366098
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2827770284783720256}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7640aa60bb4564d43ad828a71e5ec717, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SimpleTutorialPromptManager
+  tutorialCanvasGroup: {fileID: 0}
+  tutorialText: {fileID: 0}
+  firstPromptDelay: 1
+  promptDuration: 3.3
+  fadeDuration: 0.5
+  gapBetweenPrompts: 0.3
+  keyboardMoveLookPrompt: '[WASD] to move
+
+    [Mouse] to look'
+  keyboardInteractPrompt: '[E] to interact'
+  keyboardWheelPrompt: Hold [TAB] to open tool wheel
+  xboxMoveLookPrompt: '[Left Stick] to move
+
+    [Right Stick] to look'
+  xboxInteractPrompt: '[X] to interact'
+  xboxWheelPrompt: Hold [LB] to open tool wheel
+  playStationMoveLookPrompt: '[Left Stick] to move
+
+    [Right Stick] to look'
+  playStationInteractPrompt: '[Square] to interact'
+  playStationWheelPrompt: Hold [L1] to open tool wheel
+  onTutorialComplete:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6651532249580318420}
+        m_TargetAssemblyTypeName: ObjectiveManager, Assembly-CSharp
+        m_MethodName: StartObjectiveSequence
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!1 &3016321930510047153
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8086893307402730074}
+  - component: {fileID: 2606279809196867206}
+  m_Layer: 0
+  m_Name: StartObjective
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8086893307402730074
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3016321930510047153}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4467299420787392972}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2606279809196867206
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3016321930510047153}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: feae7283f9896b746a0dba6df31308e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StartingObjective
+  startingObjective: Investigate the light source
+--- !u!1 &3739217887588074139
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7764041470492163401}
+  - component: {fileID: 9193453046413478949}
+  - component: {fileID: 2472031088603424344}
+  - component: {fileID: 3390328948234681239}
+  m_Layer: 0
+  m_Name: LevelManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7764041470492163401
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3739217887588074139}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 4467299420787392972}
+  - {fileID: 8955606350500897287}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9193453046413478949
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3739217887588074139}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59f4c83a8bf20e44bbfdf7fbaeab238e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InputDeviceDetector
+--- !u!114 &2472031088603424344
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3739217887588074139}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c48c90e483e2b414ebdf244e8b9d5b5e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraShakeManager
+--- !u!114 &3390328948234681239
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3739217887588074139}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4d9c25cec6f1d346a069d26ee603a33, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CreatureEventManager
+  creatureAI: {fileID: 0}
+  generatorPowerSystem: {fileID: 0}
+  generatorStartScares:
+  - scareName: First Appearance
+    hasPlayed: 0
+    disableAfterPlaying: 1
+    scareType: 1
+    creaturePoint: {fileID: 0}
+    viewingTriggerToActivate: {fileID: 0}
+    responseTriggersToActivateAfterViewing:
+    - {fileID: 0}
+    - {fileID: 0}
+    creatureCanReactToLight: 1
+    endScareWhenCreatureDisappears: 1
+    objectsToActivate: []
+    objectsToDeactivate: []
+    audioSource: {fileID: 0}
+    scareSFX: {fileID: 0}
+    turnGeneratorOff: 0
+  powerCutScares: []
+  manualScares:
+  - scareName: Parents Bedroom Power Cut Chase
+    hasPlayed: 0
+    disableAfterPlaying: 1
+    scareType: 2
+    creaturePoint: {fileID: 0}
+    viewingTriggerToActivate: {fileID: 0}
+    responseTriggersToActivateAfterViewing: []
+    creatureCanReactToLight: 1
+    endScareWhenCreatureDisappears: 1
+    objectsToActivate: []
+    objectsToDeactivate: []
+    audioSource: {fileID: 0}
+    scareSFX: {fileID: 0}
+    turnGeneratorOff: 1
+  generatorStartCount: 0
+  powerCutCount: 0
+  activeScareEvent:
+    scareName: 
+    hasPlayed: 0
+    disableAfterPlaying: 1
+    scareType: 0
+    creaturePoint: {fileID: 0}
+    viewingTriggerToActivate: {fileID: 0}
+    responseTriggersToActivateAfterViewing: []
+    creatureCanReactToLight: 1
+    endScareWhenCreatureDisappears: 1
+    objectsToActivate: []
+    objectsToDeactivate: []
+    audioSource: {fileID: 0}
+    scareSFX: {fileID: 0}
+    turnGeneratorOff: 0
+--- !u!1 &7351679240301681903
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4467299420787392972}
+  - component: {fileID: 6651532249580318420}
+  - component: {fileID: 3583096513495292305}
+  m_Layer: 0
+  m_Name: ObjectiveManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4467299420787392972
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7351679240301681903}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 8086893307402730074}
+  m_Father: {fileID: 7764041470492163401}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6651532249580318420
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7351679240301681903}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69189cb739eb7954ab01493ea3300888, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ObjectiveManager
+  objectives:
+  - objectiveID: InvestigateLight
+    objectiveText: Investigate the light source
+    completed: 0
+  - objectiveID: PickUpTorch
+    objectiveText: Pick up the torch
+    completed: 0
+  - objectiveID: FindGenerator
+    objectiveText: Find the generator and restore power.
+    completed: 0
+  objectiveCanvasGroup: {fileID: 0}
+  objectiveText: {fileID: 0}
+  firstObjectiveDelay: 2
+  objectiveDisplayTime: 3
+  fadeDuration: 0.5
+  firstObjectiveID: InvestigateLight
+--- !u!114 &3583096513495292305
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7351679240301681903}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed1124393165edc45905bee7a13cf0d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ObjectiveToolPickupListener
+  inventory: {fileID: 0}
+  requiredTool: {fileID: 11400000, guid: bec2bfe86d812c941961eb529d4844c1, type: 2}
+  objectiveToComplete: PickUpTorch
+  nextObjectiveToStart: FindGenerator
+  onlyCompleteOnce: 1

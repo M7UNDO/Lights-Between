@@ -1,0 +1,59 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5084747813596269929
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2941488957669554763}
+  - component: {fileID: 1389974401737644959}
+  m_Layer: 0
+  m_Name: ObjectPlacer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2941488957669554763
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5084747813596269929}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1389974401737644959
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5084747813596269929}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd7d5e54005503a43a0d5a2b73fdb58f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ObjectPlacer
+  input: {fileID: 0}
+  placeableObjectPrefab: {fileID: 5929244462405602257, guid: f368cfaa48256034384d7508ccf6cafa, type: 3}
+  previewObjectPrefab: {fileID: 2009832802834269984, guid: 07c0b5fbf6d877347a8b4b07736a8d0a, type: 3}
+  playerCamera: {fileID: 0}
+  placementSurfaceLayerMask:
+    serializedVersion: 2
+    m_Bits: 256
+  previewMaterial: {fileID: 2100000, guid: dafe28237c76ac549bcd17bc4de4e3fb, type: 2}
+  validColor: {r: 0, g: 0.25376463, b: 1, a: 0.39215687}
+  invalidColor: {r: 1, g: 0.33773577, b: 0.33773577, a: 0.39215687}
+  objectDistanceFromPlayer: 3
+  raycastStartVerticalOffset: 100
+  raycastDistance: 1000
