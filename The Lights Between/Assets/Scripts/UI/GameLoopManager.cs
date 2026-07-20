@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ public class GameLoopManager : MonoBehaviour
 
     [Header("Narrative Tracking")]
     [SerializeField] private List<NarrativeInspectableItem> requiredNarrativeItems;
+    [SerializeField] private Image[] narrativeItemDots;
 
     [Header("UI Panels")]
     [SerializeField] private GameObject winPanel;
@@ -46,7 +48,21 @@ public class GameLoopManager : MonoBehaviour
         if (winPanel != null) winPanel.SetActive(false);
         if (gameOverPanel != null) gameOverPanel.SetActive(false);
 
+        InitializeDotsUI();
         UpdateClockUI();
+    }
+
+    private void InitializeDotsUI()
+    {
+        if (narrativeItemDots == null) return;
+
+        for (int i = 0; i < narrativeItemDots.Length; i++)
+        {
+            if (narrativeItemDots[i] != null)
+            {
+                narrativeItemDots[i].fillCenter = false;
+            }
+        }
     }
 
     private void Update()
@@ -85,7 +101,22 @@ public class GameLoopManager : MonoBehaviour
 
         if (requiredNarrativeItems.Contains(item))
         {
-            viewedItems.Add(item);
+            if (viewedItems.Add(item))
+            {
+                int nextDotIndex = viewedItems.Count - 1;
+                UpdateDotUI(nextDotIndex);
+            }
+        }
+    }
+
+    private void UpdateDotUI(int index)
+    {
+        if (narrativeItemDots == null || index < 0 || index >= narrativeItemDots.Length) return;
+
+        Image dot = narrativeItemDots[index];
+        if (dot != null)
+        {
+            dot.fillCenter = true;
         }
     }
 
