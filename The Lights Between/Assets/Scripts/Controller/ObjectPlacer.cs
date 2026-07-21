@@ -69,12 +69,33 @@ public class ObjectPlacer : MonoBehaviour
         RaycastHit hitInfo;
         if (Physics.Raycast(startPos, Vector3.down, out hitInfo, raycastDistance, placementSurfaceLayerMask))
         {
-            _currentPlacementPosition = hitInfo.point;
+            float verticalOffset = GetObjectVerticalExtent(_previewObject);
+            Vector3 placementPos = hitInfo.point;
+            placementPos.y += verticalOffset;
+
+            _currentPlacementPosition = placementPos;
         }
 
         Quaternion rotation = Quaternion.Euler(0f, playerCamera.transform.eulerAngles.y, 0f);
         _previewObject.transform.position = _currentPlacementPosition;
         _previewObject.transform.rotation = rotation;
+    }
+
+    private float GetObjectVerticalExtent(GameObject obj)
+    {
+        Renderer objectRenderer = obj.GetComponentInChildren<Renderer>();
+        if (objectRenderer != null)
+        {
+            return objectRenderer.bounds.extents.y;
+        }
+
+        Collider objectCollider = obj.GetComponentInChildren<Collider>();
+        if (objectCollider != null)
+        {
+            return objectCollider.bounds.extents.y;
+        }
+
+        return 0f;
     }
 
     private void SetValidPreviewState()
