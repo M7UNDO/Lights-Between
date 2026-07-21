@@ -16,6 +16,10 @@ public class CreatureAI : MonoBehaviour
     [SerializeField] private GeneratorPowerSystem generatorSystem;
     [SerializeField] private Transform breakerBoxTransform;
 
+    [Header("Door Handling")]
+    [SerializeField] private float doorCheckDistance = 2f;
+    [SerializeField] private LayerMask doorLayer;
+
     [Header("Spawn & Attack Points")]
     [SerializeField] private Transform[] attackSpawnPoints;
     [SerializeField] private float minSpawnDistance = 5f;
@@ -96,8 +100,30 @@ public class CreatureAI : MonoBehaviour
         if (player == null) return;
 
         HandleLightReaction();
+        CheckForDoorsAhead();
         currentState?.Update();
         UpdateAnimation();
+    }
+
+    private void CheckForDoorsAhead()
+    {
+        if (agent == null || !agent.hasPath || currentState is CreatureHiddenState || currentState is CreatureDisabledState)
+            return;
+
+        Vector3 moveDirection = agent.desiredVelocity.sqrMagnitude > 0.1f
+            ? agent.desiredVelocity.normalized
+            : transform.forward;
+
+        Vector3 rayOrigin = transform.position + Vector3.up * 1f;
+
+        if (Physics.Raycast(rayOrigin, moveDirection, out RaycastHit hit, doorCheckDistance, doorLayer))
+        {
+            DoorScript door = hit.collider.GetComponentInParent<DoorScript>();
+            if (door != null && !door.open)
+            {
+                door.ForceOpen();
+            }
+        }
     }
 
     public void ChangeState(ICreatureState newState)

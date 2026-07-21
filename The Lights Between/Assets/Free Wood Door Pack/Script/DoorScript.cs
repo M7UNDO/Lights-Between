@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 [RequireComponent(typeof(AudioSource))]
 public class DoorScript : MonoBehaviour, IInteractable
@@ -15,11 +16,19 @@ public class DoorScript : MonoBehaviour, IInteractable
 
     public bool toggle;
     private Coroutine rotationCoroutine;
+    private NavMeshObstacle navObstacle;
 
     void Start()
     {
         asource = GetComponent<AudioSource>();
+        navObstacle = GetComponent<NavMeshObstacle>();
+        if (navObstacle == null)
+        {
+            navObstacle = GetComponentInChildren<NavMeshObstacle>();
+        }
+
         promptMessage = toggle ? "Close" : "Open";
+        UpdateNavObstacleState();
     }
 
     public void Interact()
@@ -36,6 +45,29 @@ public class DoorScript : MonoBehaviour, IInteractable
             StopCoroutine(rotationCoroutine);
         }
         rotationCoroutine = StartCoroutine(AnimateRotation(targetAngle));
+    }
+
+    public void ForceOpen()
+    {
+        if (open) return;
+
+        toggle = true;
+        open = true;
+        promptMessage = "Close";
+
+        UpdateNavObstacleState();
+
+        if (asource != null && openDoor != null)
+        {
+            asource.clip = openDoor;
+            asource.Play();
+        }
+
+        if (rotationCoroutine != null)
+        {
+            StopCoroutine(rotationCoroutine);
+        }
+        rotationCoroutine = StartCoroutine(AnimateRotation(DoorOpenAngle));
     }
 
     private IEnumerator AnimateRotation(float targetAngle)
@@ -58,10 +90,21 @@ public class DoorScript : MonoBehaviour, IInteractable
     public void OpenDoor()
     {
         open = !open;
+        UpdateNavObstacleState();
+
         if (asource != null)
         {
             asource.clip = open ? openDoor : closeDoor;
             asource.Play();
+        }
+    }
+
+    private void UpdateNavObstacleState()
+    {
+        if (navObstacle != null)
+        {
+            navObstacle.carving = !open;
+            navObstacle.enabled = !open;
         }
     }
 }
