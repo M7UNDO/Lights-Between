@@ -34,6 +34,11 @@ public class ToolEquipmentManager : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        UnequipTool();
+    }
+
     private void Update()
     {
         if (input == null) return;

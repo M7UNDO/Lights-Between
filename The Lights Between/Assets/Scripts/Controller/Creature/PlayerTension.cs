@@ -15,6 +15,7 @@ public class PlayerTensionSystem : MonoBehaviour
 
     private float currentTension;
     private bool hasTriggeredKill;
+    private bool isTensionActive;
 
     public float CurrentTension => currentTension;
     public float MaxTension => maxTension;
@@ -37,11 +38,17 @@ public class PlayerTensionSystem : MonoBehaviour
 
     private void Update()
     {
+        if (!isTensionActive) return;
         if (playerLightStatus == null || creatureAI == null || hasTriggeredKill) return;
 
         HandleTensionCalculation();
         UpdateUI();
         CheckTensionThreshold();
+    }
+
+    public void ActivateTensionSystem()
+    {
+        isTensionActive = true;
     }
 
     private void HandleTensionCalculation()

@@ -7,6 +7,7 @@ public class IntroDialogueController : MonoBehaviour
 {
     [Header("Input")]
     [SerializeField] private InputActionReference skipAction;
+    [SerializeField] private GameObject skipPromptObject;
 
     [Header("Text References")]
     [SerializeField] private TMP_Text dateText;
@@ -82,6 +83,8 @@ public class IntroDialogueController : MonoBehaviour
             ellipsisText.gameObject.SetActive(false);
         }
 
+        SetSkipPromptActive(false);
+
         StartCoroutine(PlayIntroSequence());
     }
 
@@ -99,6 +102,14 @@ public class IntroDialogueController : MonoBehaviour
         {
             textComponent.text = string.Empty;
             textComponent.maxVisibleCharacters = 0;
+        }
+    }
+
+    private void SetSkipPromptActive(bool isActive)
+    {
+        if (skipPromptObject != null)
+        {
+            skipPromptObject.SetActive(isActive);
         }
     }
 
@@ -155,6 +166,7 @@ public class IntroDialogueController : MonoBehaviour
     private IEnumerator TypeThought(string thought)
     {
         canAdvance = false;
+        SetSkipPromptActive(false);
 
         if (ellipsisFlashCoroutine != null)
         {
@@ -168,6 +180,7 @@ public class IntroDialogueController : MonoBehaviour
         ellipsisFlashCoroutine = StartCoroutine(FlashEllipsis());
 
         canAdvance = true;
+        SetSkipPromptActive(true);
     }
 
     private IEnumerator FlashEllipsis()
@@ -223,6 +236,7 @@ public class IntroDialogueController : MonoBehaviour
     private IEnumerator LoadNextScene()
     {
         canAdvance = false;
+        SetSkipPromptActive(false);
 
         if (ellipsisFlashCoroutine != null)
         {

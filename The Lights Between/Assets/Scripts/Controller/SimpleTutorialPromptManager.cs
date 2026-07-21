@@ -18,19 +18,20 @@ public class SimpleTutorialPromptManager : MonoBehaviour
     [Header("Keyboard Prompts")]
     [SerializeField] private string keyboardMoveLookPrompt = "[WASD] to move\n[Mouse] to look";
     [SerializeField] private string keyboardInteractPrompt = "[E] to interact";
-    [SerializeField] private string keyboardWheelPrompt = "Hold [TAB] to open tool wheel";
+    [SerializeField] private string keyboardWheelPrompt = "Hold [TAB] to open tool wheel + navigate [Mouse]";
 
     [Header("Xbox Prompts")]
     [SerializeField] private string xboxMoveLookPrompt = "[Left Stick] to move\n[Right Stick] to look";
     [SerializeField] private string xboxInteractPrompt = "[X] to interact";
-    [SerializeField] private string xboxWheelPrompt = "Hold [LB] to open tool wheel";
+    [SerializeField] private string xboxWheelPrompt = "Hold [LB] to open tool wheel + navigate [Right Stick] ";
 
     [Header("PlayStation Prompts")]
     [SerializeField] private string playStationMoveLookPrompt = "[Left Stick] to move\n[Right Stick] to look";
     [SerializeField] private string playStationInteractPrompt = "[Square] to interact";
-    [SerializeField] private string playStationWheelPrompt = "Hold [L1] to open tool wheel";
+    [SerializeField] private string playStationWheelPrompt = "Hold [L1] to open tool wheel + navigate [Right Stick]";
 
-    [Header("Tutorial Complete Event")]
+    [Header("Tutorial Events")]
+    [SerializeField] private UnityEvent onTutorialStart;
     [SerializeField] private UnityEvent onTutorialComplete;
 
     private InputDeviceType currentDevice = InputDeviceType.KeyboardMouse;
@@ -61,14 +62,31 @@ public class SimpleTutorialPromptManager : MonoBehaviour
 
     private void OnEnable()
     {
-        if (InputDeviceDetector.Instance != null)
-        {
-            currentDevice = InputDeviceDetector.Instance.CurrentDevice;
-            InputDeviceDetector.Instance.OnDeviceChanged += HandleDeviceChanged;
-        }
+        SubscribeToInputDetector();
     }
 
     private void OnDisable()
+    {
+        UnsubscribeFromInputDetector();
+    }
+
+    private void Start()
+    {
+        SubscribeToInputDetector();
+        StartCoroutine(PlayTutorialSequence());
+    }
+
+    private void SubscribeToInputDetector()
+    {
+        if (InputDeviceDetector.Instance != null)
+        {
+            InputDeviceDetector.Instance.OnDeviceChanged -= HandleDeviceChanged;
+            InputDeviceDetector.Instance.OnDeviceChanged += HandleDeviceChanged;
+            currentDevice = InputDeviceDetector.Instance.CurrentDevice;
+        }
+    }
+
+    private void UnsubscribeFromInputDetector()
     {
         if (InputDeviceDetector.Instance != null)
         {
@@ -76,13 +94,10 @@ public class SimpleTutorialPromptManager : MonoBehaviour
         }
     }
 
-    private void Start()
-    {
-        StartCoroutine(PlayTutorialSequence());
-    }
-
     private IEnumerator PlayTutorialSequence()
     {
+        onTutorialStart?.Invoke();
+
         yield return new WaitForSeconds(firstPromptDelay);
 
         yield return StartCoroutine(ShowPromptRoutine(TutorialPromptType.MoveLook));

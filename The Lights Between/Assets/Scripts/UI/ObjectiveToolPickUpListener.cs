@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 public class ObjectiveToolPickupListener : MonoBehaviour
 {
@@ -12,6 +13,9 @@ public class ObjectiveToolPickupListener : MonoBehaviour
 
     [Header("Settings")]
     [SerializeField] private bool onlyCompleteOnce = true;
+
+    [Header("Events")]
+    [SerializeField] private UnityEvent onObjectiveCompleted;
 
     private bool hasCompleted;
 
@@ -46,6 +50,8 @@ public class ObjectiveToolPickupListener : MonoBehaviour
         {
             ObjectiveManager.Instance.SetObjective(nextObjectiveToStart);
         }
+
+        onObjectiveCompleted?.Invoke();
 
         hasCompleted = true;
 
