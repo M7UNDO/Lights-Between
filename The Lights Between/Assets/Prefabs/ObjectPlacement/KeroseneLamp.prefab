@@ -712,7 +712,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ParaffinLampScript
   lampLightObject: {fileID: 8076049926508893487}
   lampLightZone: {fileID: 1712620419860849201}
-  drainRate: 2
+  drainRate: 0.21
 --- !u!114 &7000228418690918089
 MonoBehaviour:
   m_ObjectHideFlags: 0
