@@ -97,6 +97,28 @@ public class ElectricBoxBreaker : MonoBehaviour, IInteractable
         RefreshPowerGrid();
     }
 
+    public void TripBreaker()
+    {
+        if (!isLeverUp) return;
+
+        isLeverUp = false;
+        UpdatePromptMessage();
+
+        if (audioSource != null && switchOffSFX != null)
+        {
+            audioSource.clip = switchOffSFX;
+            audioSource.Play();
+        }
+
+        if (rotationCoroutine != null)
+        {
+            StopCoroutine(rotationCoroutine);
+        }
+        rotationCoroutine = StartCoroutine(AnimateLever());
+
+        RefreshPowerGrid();
+    }
+
     public void RefreshPowerGrid()
     {
         bool targetState = IsGridActive;

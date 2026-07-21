@@ -10,6 +10,12 @@ public class GramophoneController : MonoBehaviour, IInteractable
     [Header("Prompt Settings")]
     [SerializeField] private string stopMusicPrompt = "Stop Gramophone";
 
+    [Header("Visual & Animation Settings")]
+    [SerializeField] private Animator gramophoneAnimator;
+    [SerializeField] private Light gramophoneLight;
+    [SerializeField] private string playTriggerName = "play";
+    [SerializeField] private string offTriggerName = "off";
+
     private NarrativeInspectableItem narrativeItem;
     private bool isPlayingMusic;
 
@@ -21,6 +27,16 @@ public class GramophoneController : MonoBehaviour, IInteractable
         if (gramophoneAudioSource == null)
         {
             gramophoneAudioSource = GetComponent<AudioSource>();
+        }
+
+        if (gramophoneAnimator == null)
+        {
+            gramophoneAnimator = GetComponent<Animator>();
+        }
+
+        if (gramophoneLight != null)
+        {
+            gramophoneLight.enabled = false;
         }
     }
 
@@ -34,6 +50,17 @@ public class GramophoneController : MonoBehaviour, IInteractable
             gramophoneAudioSource.loop = true;
             gramophoneAudioSource.Play();
             isPlayingMusic = true;
+
+            if (gramophoneAnimator != null)
+            {
+                gramophoneAnimator.ResetTrigger(offTriggerName);
+                gramophoneAnimator.SetTrigger(playTriggerName);
+            }
+
+            if (gramophoneLight != null)
+            {
+                gramophoneLight.enabled = true;
+            }
         }
     }
 
@@ -44,6 +71,17 @@ public class GramophoneController : MonoBehaviour, IInteractable
             gramophoneAudioSource.Stop();
         }
         isPlayingMusic = false;
+
+        if (gramophoneAnimator != null)
+        {
+            gramophoneAnimator.ResetTrigger(playTriggerName);
+            gramophoneAnimator.SetTrigger(offTriggerName);
+        }
+
+        if (gramophoneLight != null)
+        {
+            gramophoneLight.enabled = false;
+        }
     }
 
     public void Interact()

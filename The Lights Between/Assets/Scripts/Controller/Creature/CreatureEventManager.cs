@@ -55,6 +55,7 @@ public class CreatureEventManager : MonoBehaviour
     [Header("References")]
     [SerializeField] private CreatureAI creatureAI;
     [SerializeField] private GeneratorPowerSystem generatorPowerSystem;
+    [SerializeField] private ElectricBoxBreaker electricBoxBreaker;
 
     [Header("Generator Start Scares")]
     [SerializeField] private CreatureScareEvent[] generatorStartScares;
@@ -111,6 +112,23 @@ public class CreatureEventManager : MonoBehaviour
 
     public void TriggerPowerCut()
     {
+        bool isPowerActive = false;
+
+        if (electricBoxBreaker != null)
+        {
+            isPowerActive = electricBoxBreaker.IsGridActive;
+        }
+        else if (generatorPowerSystem != null)
+        {
+            isPowerActive = generatorPowerSystem.IsPowerOn;
+        }
+
+        if (!isPowerActive)
+        {
+            Debug.Log("Power cut triggered, but the power grid was already off. Skipping scare.");
+            return;
+        }
+
         powerCutCount++;
 
         int scareIndex = powerCutCount - 1;
@@ -118,6 +136,11 @@ public class CreatureEventManager : MonoBehaviour
         if (powerCutScares != null && scareIndex >= 0 && scareIndex < powerCutScares.Length)
         {
             PlayScare(powerCutScares[scareIndex]);
+        }
+
+        if (electricBoxBreaker != null)
+        {
+            electricBoxBreaker.TripBreaker();
         }
 
         if (generatorPowerSystem != null)

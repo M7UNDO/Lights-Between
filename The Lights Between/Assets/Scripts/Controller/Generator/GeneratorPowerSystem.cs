@@ -44,6 +44,7 @@ public class GeneratorPowerSystem : MonoBehaviour, IInteractable, IToolPower
     public float CurrentPower => currentFuel;
     public float MaxPower => maxFuel;
     public bool UsesPower => isPoweredOn;
+    public bool IsPowerOn => isPoweredOn;
 
     private void Start()
     {
