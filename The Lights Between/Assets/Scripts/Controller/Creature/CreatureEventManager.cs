@@ -35,6 +35,13 @@ public class CreatureScareEvent
     public GameObject[] objectsToActivate;
     public GameObject[] objectsToDeactivate;
 
+    [Header("Optional Chair Movement")]
+    public Transform chairTransform;
+    public Transform chairTargetPoint;
+
+    [Header("Optional Gramophone Event")]
+    public GramophoneController gramophoneController;
+
     [Header("Optional Audio")]
     public AudioSource audioSource;
     public AudioClip scareSFX;
@@ -213,6 +220,17 @@ public class CreatureEventManager : MonoBehaviour
         ActivateObjects(scareEvent.objectsToActivate);
         DeactivateObjects(scareEvent.objectsToDeactivate);
 
+        if (scareEvent.chairTransform != null && scareEvent.chairTargetPoint != null)
+        {
+            scareEvent.chairTransform.position = scareEvent.chairTargetPoint.position;
+            scareEvent.chairTransform.rotation = scareEvent.chairTargetPoint.rotation;
+        }
+
+        if (scareEvent.gramophoneController != null)
+        {
+            scareEvent.gramophoneController.PlayMusic();
+        }
+
         ActivateObject(scareEvent.viewingTriggerToActivate, true);
 
         PlayScareAudio(scareEvent);
@@ -222,7 +240,7 @@ public class CreatureEventManager : MonoBehaviour
             generatorPowerSystem.TurnGeneratorOff();
         }
 
-        if (creatureAI != null)
+        if (creatureAI != null && scareEvent.scareType != CreatureScareType.None)
         {
             creatureAI.SetLightReaction(scareEvent.creatureCanReactToLight);
 
