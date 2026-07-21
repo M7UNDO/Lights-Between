@@ -8,6 +8,7 @@ public class ParaffinLampScript : MonoBehaviour, IToolPower
 
     [Header("Drain Settings")]
     [SerializeField] private float drainRate = 2f;
+    [SerializeField] private float defaultMaxPower = 100f;
 
     private ToolClass toolData;
     private float currentPower;
@@ -15,8 +16,17 @@ public class ParaffinLampScript : MonoBehaviour, IToolPower
     private bool isEquipped;
 
     public float CurrentPower => currentPower;
-    public float MaxPower => maxPower;
-    public bool UsesPower => toolData != null && toolData.usesPower;
+    public float MaxPower => maxPower > 0f ? maxPower : defaultMaxPower;
+    public bool UsesPower => toolData != null ? toolData.usesPower : true;
+
+    private void Awake()
+    {
+        if (maxPower <= 0f)
+        {
+            maxPower = defaultMaxPower;
+            currentPower = maxPower;
+        }
+    }
 
     public void Initialise(ToolClass tool)
     {
@@ -38,7 +48,7 @@ public class ParaffinLampScript : MonoBehaviour, IToolPower
 
     private void Update()
     {
-        if (!isEquipped) return;
+        if (!isEquipped && toolData != null) return;
         if (currentPower <= 0f) return;
 
         currentPower -= drainRate * Time.deltaTime;

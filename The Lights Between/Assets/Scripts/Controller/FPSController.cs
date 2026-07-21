@@ -410,14 +410,20 @@ public class FPSController : MonoBehaviour
 
         if (Physics.Raycast(ray, out RaycastHit hit, interactionRange, interactionLayer))
         {
-            if (hit.collider.TryGetComponent<IInteractable>(out var interactable))
+            bool hasInteractable = hit.collider.TryGetComponent<IInteractable>(out var interactable);
+            bool hasPower = hit.collider.TryGetComponent<IToolPower>(out var powerItem);
+
+            if (hasInteractable || hasPower)
             {
-                currentInteractable = interactable;
-                isInteractable = true;
+                if (hasInteractable)
+                {
+                    currentInteractable = interactable;
+                    isInteractable = true;
+                }
 
                 if (interactText != null)
                 {
-                    string basePrompt = "Interact";
+                    string basePrompt = "";
 
                     if (hit.collider.TryGetComponent<Door>(out Door door))
                     {
@@ -439,17 +445,39 @@ public class FPSController : MonoBehaviour
                     {
                         basePrompt = item.InteractionPrompt;
                     }
+                    else if (hit.collider.TryGetComponent<ParaffinLampScript>(out ParaffinLampScript paraffinLamp))
+                    {
+                        basePrompt = "Paraffin Lamp";
+                    }
+                    else if (hasInteractable)
+                    {
+                        basePrompt = "Interact";
+                    }
 
-                    if (hit.collider.TryGetComponent<IToolPower>(out IToolPower powerItem) && powerItem.UsesPower)
+                    if (hasPower && powerItem.UsesPower)
                     {
                         int powerPercent = Mathf.FloorToInt((powerItem.CurrentPower / powerItem.MaxPower) * 100f);
-                        basePrompt = $"{basePrompt} {powerPercent}%";
+
+                        if (!string.IsNullOrEmpty(basePrompt))
+                        {
+                            basePrompt = $"{basePrompt} {powerPercent}%";
+                        }
+                        else
+                        {
+                            basePrompt = $"Paraffin Lamp {powerPercent}%";
+                        }
                     }
 
                     interactText.text = basePrompt;
                 }
 
                 objectOutline = hit.collider.GetComponent<Outline>() ?? hit.collider.GetComponentInChildren<Outline>();
+
+                if (objectOutline != null)
+                {
+                    bool showCrosshairs = !isInspecting && !isJumpscareActive;
+                    objectOutline.enabled = showCrosshairs;
+                }
             }
         }
     }
@@ -457,23 +485,30 @@ public class FPSController : MonoBehaviour
     private void UpdateCrosshair()
     {
         bool showCrosshairs = !isInspecting && !isJumpscareActive;
-        GameObject input = interactPrompt.transform.GetChild(0).gameObject;
+
+        bool hasHoverInfo = isInteractable || (objectOutline != null);
 
         if (Crosshair != null && InteractableCrosshair != null)
         {
-            Crosshair.gameObject.SetActive(showCrosshairs && !isInteractable);
-            InteractableCrosshair.gameObject.SetActive(showCrosshairs && isInteractable);
+            Crosshair.gameObject.SetActive(showCrosshairs && !hasHoverInfo);
+            InteractableCrosshair.gameObject.SetActive(showCrosshairs && hasHoverInfo);
         }
 
         if (interactPrompt != null)
         {
-            interactPrompt.SetActive(showCrosshairs && isInteractable);
-            input.SetActive(showCrosshairs && isInteractable);
+            GameObject input = interactPrompt.transform.GetChild(0).gameObject;
+
+            interactPrompt.SetActive(showCrosshairs && hasHoverInfo);
+
+            if (input != null)
+            {
+                input.SetActive(showCrosshairs && isInteractable);
+            }
         }
 
         if (objectOutline != null)
         {
-            objectOutline.enabled = showCrosshairs && isInteractable;
+            objectOutline.enabled = showCrosshairs && hasHoverInfo;
         }
     }
 
