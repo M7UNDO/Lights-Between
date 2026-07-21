@@ -6,6 +6,7 @@ public class CreatureAI : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private Transform player;
+    [SerializeField] private Camera playerCamera;
     [SerializeField] private GameObject creatureVisuals;
     [SerializeField] private Collider creatureCollider;
     [SerializeField] private NavMeshAgent agent;
@@ -14,6 +15,12 @@ public class CreatureAI : MonoBehaviour
     [SerializeField] private CreatureLightSensor creatureLightSensor;
     [SerializeField] private GeneratorPowerSystem generatorSystem;
     [SerializeField] private Transform breakerBoxTransform;
+
+    [Header("Spawn & Attack Points")]
+    [SerializeField] private Transform[] attackSpawnPoints;
+    [SerializeField] private float minSpawnDistance = 5f;
+    [SerializeField] private float maxSpawnDistance = 25f;
+    [SerializeField] private float playerFOVAngle = 60f;
 
     [Header("Dynamic AI Settings")]
     [SerializeField] private float directHuntThreshold = 85f;
@@ -76,6 +83,7 @@ public class CreatureAI : MonoBehaviour
         if (animator == null) animator = GetComponentInChildren<Animator>();
         if (creatureVoiceAudio == null) creatureVoiceAudio = GetComponent<CreatureVoiceAudio>();
         if (creatureLightSensor == null) creatureLightSensor = GetComponent<CreatureLightSensor>();
+        if (playerCamera == null && Camera.main != null) playerCamera = Camera.main;
     }
 
     private void Start()
@@ -132,6 +140,72 @@ public class CreatureAI : MonoBehaviour
             lightContactTimer = 0f;
             ChangeState(new CreatureFleeState(this));
         }
+    }
+
+    public Transform GetBestAttackPoint()
+    {
+        if (attackSpawnPoints == null || attackSpawnPoints.Length == 0 || player == null)
+        {
+            return null;
+        }
+
+        Transform bestPoint = null;
+        float bestScore = float.MinValue;
+
+        Vector3 viewDirection = playerCamera != null ? playerCamera.transform.forward : player.forward;
+
+        foreach (Transform point in attackSpawnPoints)
+        {
+            if (point == null) continue;
+
+            Vector3 toPoint = point.position - player.position;
+            float distance = toPoint.magnitude;
+
+            if (distance < minSpawnDistance || distance > maxSpawnDistance)
+            {
+                continue;
+            }
+
+            Vector3 directionToPoint = toPoint.normalized;
+            float angle = Vector3.Angle(viewDirection, directionToPoint);
+
+            bool isBehindPlayer = angle > (playerFOVAngle * 0.5f);
+
+            float score = distance;
+            if (isBehindPlayer)
+            {
+                score += 100f;
+            }
+
+            if (score > bestScore)
+            {
+                bestScore = score;
+                bestPoint = point;
+            }
+        }
+
+        if (bestPoint == null)
+        {
+            float fallbackDistance = float.MaxValue;
+            foreach (Transform point in attackSpawnPoints)
+            {
+                if (point == null) continue;
+                float dist = Vector3.Distance(player.position, point.position);
+                if (dist < fallbackDistance)
+                {
+                    fallbackDistance = dist;
+                    bestPoint = point;
+                }
+            }
+        }
+
+        return bestPoint;
+    }
+
+    public void StartChaseFromBestPoint()
+    {
+        Transform bestPoint = GetBestAttackPoint();
+        StartChaseFromPoint(bestPoint);
     }
 
     public void RevealAtPoint(Transform revealPoint)

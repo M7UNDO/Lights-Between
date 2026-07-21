@@ -77,7 +77,7 @@ public class PlayerTensionSystem : MonoBehaviour
 
     private void TriggerCreatureKill()
     {
-        creatureAI.StartChaseFromCurrentPosition();
+        creatureAI.StartChaseFromBestPoint();
     }
 
     public void ResetTension()
