@@ -14,6 +14,13 @@ public class ToolPickup : MonoBehaviour, IInteractable
         if (inventory != null)
         {
             inventory.AddTool(tool);
+
+            ToolEquipmentManager equipmentManager = FindFirstObjectByType<ToolEquipmentManager>();
+            if (equipmentManager != null && !equipmentManager.HasToolEquipped)
+            {
+                equipmentManager.EquipTool(tool);
+            }
+
             Destroy(gameObject);
         }
     }

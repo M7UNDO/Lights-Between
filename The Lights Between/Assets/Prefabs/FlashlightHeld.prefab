@@ -506,4 +506,9 @@ MonoBehaviour:
   lightCookie: {fileID: 2800000, guid: 450d195e6a6eb4447a4ad8e358c7acfe, type: 3}
   glassRenderer: {fileID: 8236463954874935145}
   drainRate: 0.33
+  promptDuration: 4
+  fadeDuration: 0.5
+  keyboardTogglePrompt: '[Left Click] to toggle On/Off'
+  xboxTogglePrompt: Press [RB] to toggle On/Off
+  playStationTogglePrompt: Press [R1] to toggle On/Off
   torchLightZone: {fileID: 2558210924295630255}

@@ -35,23 +35,20 @@ public class BackgroundMusicManager : MonoBehaviour
         {
             StartMusic();
         }
-
     }
 
     private void Update()
     {
         if (audioSource == null || !hasStarted) return;
 
-        if (!audioSource.isPlaying && loopAll)
+        if (!audioSource.isPlaying && loopAll && Time.timeScale > 0f)
         {
             PlayNextTrack();
         }
     }
 
-
     public void StartMusic()
     {
-
         hasStarted = true;
         currentTrackIndex = playRandomly ? Random.Range(0, backgroundTracks.Length) : 0;
         PlayTrack(currentTrackIndex);
@@ -88,6 +85,22 @@ public class BackgroundMusicManager : MonoBehaviour
         }
 
         PlayTrack(currentTrackIndex);
+    }
+
+    public void PauseMusic()
+    {
+        if (audioSource != null && audioSource.isPlaying)
+        {
+            audioSource.Pause();
+        }
+    }
+
+    public void UnpauseMusic()
+    {
+        if (audioSource != null && hasStarted)
+        {
+            audioSource.UnPause();
+        }
     }
 
     public void StopMusic()

@@ -46,7 +46,7 @@ Light:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 20
   m_Range: 20
-  m_SpotAngle: 93.928055
+  m_SpotAngle: 76.75263
   m_InnerSpotAngle: 23.523212
   m_CookieSize2D: {x: 10, y: 10}
   m_Shadows:

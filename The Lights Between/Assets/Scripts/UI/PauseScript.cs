@@ -11,6 +11,7 @@ public class PauseScript : MonoBehaviour
     [Header("References")]
     [Space(5)]
     [SerializeField] private TabController tabController;
+    [SerializeField] private BackgroundMusicManager musicManager;
 
     [Header("Menu Panels")]
     [Space(5)]
@@ -51,6 +52,11 @@ public class PauseScript : MonoBehaviour
         if (tabController != null && selectInput != null)
         {
             tabController.InitializeTabNavigation(selectInput);
+        }
+
+        if (musicManager == null)
+        {
+            musicManager = FindFirstObjectByType<BackgroundMusicManager>();
         }
 
         ForceResume();
@@ -143,6 +149,11 @@ public class PauseScript : MonoBehaviour
         IsPaused = true;
         Time.timeScale = 0f;
 
+        if (musicManager != null && musicManager.levelScene)
+        {
+            musicManager.PauseMusic();
+        }
+
         if (pauseCanvas != null) pauseCanvas.SetActive(true);
         if (pausePanel != null) pausePanel.SetActive(true);
         if (settingsPanel != null) settingsPanel.SetActive(false);
@@ -163,6 +174,11 @@ public class PauseScript : MonoBehaviour
     {
         IsPaused = false;
         Time.timeScale = 1f;
+
+        if (musicManager != null && musicManager.levelScene)
+        {
+            musicManager.UnpauseMusic();
+        }
 
         if (pausePanel != null) pausePanel.SetActive(false);
         if (settingsPanel != null) settingsPanel.SetActive(false);
@@ -206,12 +222,14 @@ public class PauseScript : MonoBehaviour
 
     public void RestartLevel()
     {
+        SimpleTutorialPromptManager.ResetTutorialSession();
         ForceResume();
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     public void LoadMainMenu()
     {
+        SimpleTutorialPromptManager.ResetTutorialSession();
         ForceResume();
         SceneManager.LoadScene(mainMenuSceneName);
     }

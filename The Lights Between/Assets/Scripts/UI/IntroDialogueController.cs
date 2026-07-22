@@ -23,6 +23,12 @@ public class IntroDialogueController : MonoBehaviour
     [TextArea(2, 4)]
     [SerializeField] private string[] playerThoughts;
 
+    [Header("Audio Settings")]
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip[] typeSoundClips;
+    [SerializeField] private float minPitch = 0.95f;
+    [SerializeField] private float maxPitch = 1.05f;
+
     [Header("Typing Settings")]
     [SerializeField] private float typeSpeed = 0.04f;
     [SerializeField] private float dateHoldTime = 5f;
@@ -50,6 +56,11 @@ public class IntroDialogueController : MonoBehaviour
         dateCanvasGroup = GetOrAddCanvasGroup(dateText, dateCanvasGroup);
         locationCanvasGroup = GetOrAddCanvasGroup(locationText, locationCanvasGroup);
         dialogueCanvasGroup = GetOrAddCanvasGroup(dialogueText, dialogueCanvasGroup);
+
+        if (audioSource == null)
+        {
+            audioSource = GetComponent<AudioSource>();
+        }
 
         typeSpeedWait = new WaitForSeconds(typeSpeed);
     }
@@ -210,10 +221,34 @@ public class IntroDialogueController : MonoBehaviour
         for (int i = 0; i <= totalCharacters; i++)
         {
             targetText.maxVisibleCharacters = i;
+
+            if (i > 0 && i <= totalCharacters)
+            {
+                char currentCharacter = targetText.textInfo.characterInfo[i - 1].character;
+                if (!char.IsWhiteSpace(currentCharacter))
+                {
+                    PlayRandomTypeSound();
+                }
+            }
+
             yield return typeSpeedWait;
         }
 
         isTyping = false;
+    }
+
+    private void PlayRandomTypeSound()
+    {
+        if (audioSource == null || typeSoundClips == null || typeSoundClips.Length == 0) return;
+
+        int randomIndex = Random.Range(0, typeSoundClips.Length);
+        AudioClip clip = typeSoundClips[randomIndex];
+
+        if (clip != null)
+        {
+            audioSource.pitch = Random.Range(minPitch, maxPitch);
+            audioSource.PlayOneShot(clip);
+        }
     }
 
     private IEnumerator FadeCanvasGroup(CanvasGroup canvasGroup, float startAlpha, float endAlpha)

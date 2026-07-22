@@ -132,7 +132,7 @@ public class FPSController : MonoBehaviour
 
     private void Update()
     {
-        if (isInspecting || isInMiniGame || isJumpscareActive || GameLoopManager.IsGameEnded)
+        if (SimpleTutorialPromptManager.IsTutorialActive || isInspecting || isInMiniGame || isJumpscareActive || GameLoopManager.IsGameEnded)
         {
             StopFootsteps();
             return;
@@ -151,7 +151,7 @@ public class FPSController : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (isInspecting || isInMiniGame || isJumpscareActive || PauseScript.IsPaused || GameLoopManager.IsGameEnded) return;
+        if (SimpleTutorialPromptManager.IsTutorialActive || isInspecting || isInMiniGame || isJumpscareActive || PauseScript.IsPaused || GameLoopManager.IsGameEnded) return;
         CameraRotation();
     }
 

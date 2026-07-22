@@ -75,6 +75,23 @@ public class ObjectiveManager : MonoBehaviour
         SetObjective(firstObjectiveID);
     }
 
+    public void SetFirstObjective(string objectiveID)
+    {
+        Objective objective = GetObjectiveByID(objectiveID);
+
+        if (objective == null)
+        {
+            Debug.LogWarning("Objective not found: " + objectiveID);
+            return;
+        }
+
+        if (objective.completed)
+        {
+            return;
+        }
+
+        currentObjective = objective;
+    }
     public void SetObjective(string objectiveID)
     {
         Objective objective = GetObjectiveByID(objectiveID);
@@ -94,7 +111,7 @@ public class ObjectiveManager : MonoBehaviour
 
         ShowObjective(objective.objectiveText);
 
-        Debug.Log("Objective started: " + objective.objectiveID);
+        //Debug.Log("Objective started: " + objective.objectiveID);
     }
 
     public void CompleteObjective(string objectiveID)

@@ -5,30 +5,33 @@ using UnityEngine.Events;
 
 public class SimpleTutorialPromptManager : MonoBehaviour
 {
+    public static bool IsTutorialActive { get; private set; }
+    public static bool HasCompletedTutorialOnce { get; private set; }
+
     [Header("UI References")]
-    [SerializeField] private CanvasGroup tutorialCanvasGroup;
-    [SerializeField] private TMP_Text tutorialText;
+    public CanvasGroup tutorialCanvasGroup;
+    public TMP_Text tutorialText;
 
     [Header("Timing")]
     [SerializeField] private float firstPromptDelay = 1f;
-    [SerializeField] private float promptDuration = 3f;
+    [SerializeField] private float promptDuration = 3.5f;
     [SerializeField] private float fadeDuration = 0.5f;
     [SerializeField] private float gapBetweenPrompts = 0.3f;
 
     [Header("Keyboard Prompts")]
-    [SerializeField] private string keyboardMoveLookPrompt = "[WASD] to move\n[Mouse] to look";
-    [SerializeField] private string keyboardInteractPrompt = "[E] to interact";
-    [SerializeField] private string keyboardWheelPrompt = "Hold [TAB] to open tool wheel + navigate [Mouse]";
+    [SerializeField] private string keyboardMoveLookPrompt = "[WASD] Move\n[Mouse] Look";
+    [SerializeField] private string keyboardInteractPrompt = "[E] Interact";
+    [SerializeField] private string keyboardWheelPrompt = "Hold [TAB] + Move [Mouse]\nRelease [TAB] to equip item";
 
     [Header("Xbox Prompts")]
-    [SerializeField] private string xboxMoveLookPrompt = "[Left Stick] to move\n[Right Stick] to look";
-    [SerializeField] private string xboxInteractPrompt = "[X] to interact";
-    [SerializeField] private string xboxWheelPrompt = "Hold [LB] to open tool wheel + navigate [Right Stick] ";
+    [SerializeField] private string xboxMoveLookPrompt = "[Left Stick] Move\n[Right Stick] Look";
+    [SerializeField] private string xboxInteractPrompt = "[X] Interact";
+    [SerializeField] private string xboxWheelPrompt = "Hold [LB] + Move [Right Stick]\nRelease [LB] to equip item";
 
     [Header("PlayStation Prompts")]
-    [SerializeField] private string playStationMoveLookPrompt = "[Left Stick] to move\n[Right Stick] to look";
-    [SerializeField] private string playStationInteractPrompt = "[Square] to interact";
-    [SerializeField] private string playStationWheelPrompt = "Hold [L1] to open tool wheel + navigate [Right Stick]";
+    [SerializeField] private string playStationMoveLookPrompt = "[Left Stick] Move\n[Right Stick] Look";
+    [SerializeField] private string playStationInteractPrompt = "[Square] Interact";
+    [SerializeField] private string playStationWheelPrompt = "Hold [L1] + Move [Right Stick]\nRelease [L1] to equip item";
 
     [Header("Tutorial Events")]
     [SerializeField] private UnityEvent onTutorialStart;
@@ -46,6 +49,12 @@ public class SimpleTutorialPromptManager : MonoBehaviour
     }
 
     private TutorialPromptType currentPromptType = TutorialPromptType.None;
+
+    public static void ResetTutorialSession()
+    {
+        HasCompletedTutorialOnce = false;
+        IsTutorialActive = false;
+    }
 
     private void Awake()
     {
@@ -72,6 +81,13 @@ public class SimpleTutorialPromptManager : MonoBehaviour
 
     private void Start()
     {
+        if (HasCompletedTutorialOnce)
+        {
+            IsTutorialActive = false;
+            onTutorialComplete?.Invoke();
+            return;
+        }
+
         SubscribeToInputDetector();
         StartCoroutine(PlayTutorialSequence());
     }
@@ -96,6 +112,7 @@ public class SimpleTutorialPromptManager : MonoBehaviour
 
     private IEnumerator PlayTutorialSequence()
     {
+        IsTutorialActive = true;
         onTutorialStart?.Invoke();
 
         yield return new WaitForSeconds(firstPromptDelay);
@@ -115,6 +132,8 @@ public class SimpleTutorialPromptManager : MonoBehaviour
 
         yield return new WaitForSeconds(fadeDuration);
 
+        IsTutorialActive = false;
+        HasCompletedTutorialOnce = true;
         onTutorialComplete?.Invoke();
     }
 

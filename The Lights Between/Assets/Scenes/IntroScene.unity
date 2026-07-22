@@ -147,7 +147,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 2687023037802757679, guid: 8c70c81bc9369c64ca4a78a78516cb02, type: 2}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 8300000, guid: 17417465e59765345bcda1e3830369c1, type: 3}
+  m_Resource: {fileID: 8300000, guid: ed02a67a32f902c4cba3bed272973949, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -479,7 +479,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 50, y: 50}
-  m_SizeDelta: {x: 55, y: 55}
+  m_SizeDelta: {x: 40, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &252807872
 MonoBehaviour:
@@ -1066,6 +1066,135 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 469479247}
   m_CullTransparentMesh: 1
+--- !u!1 &684421540
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 684421542}
+  - component: {fileID: 684421541}
+  m_Layer: 0
+  m_Name: TypeSFX
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!82 &684421541
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 684421540}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 2687023037802757679, guid: 8c70c81bc9369c64ca4a78a78516cb02, type: 2}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 8300000, guid: 17417465e59765345bcda1e3830369c1, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!4 &684421542
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 684421540}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1574300540}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1144091719
 GameObject:
   m_ObjectHideFlags: 0
@@ -1308,16 +1437,30 @@ MonoBehaviour:
   ellipsisText: {fileID: 469479249}
   dateLine: '11 August 2004
 
-    11:13 AM'
+    12:00 AM'
   locationLine: Morrow Family Home
   playerThoughts:
   - I tried calling before I left campus. Still nothing. Mom always says the phones
     out here are unreliable, but she never goes this long without checking in.
-  - Nothing from Dad. Nothing from Samuel. No messages, no letters. Two weeks without
-    hearing anything from them, something is wrong
-  - I told myself I was overthinking it the whole drive here. Dad would probably
-    laugh and say I've gone soft
-  - Still, I needed to come home and see them for myself.
+  - Nothing from Dad. Nothing from Samuel. No calls. No messages. It's been weeks
+    of radio silence. That's not like them.
+  - I kept telling myself I was overthinking it the whole drive here. Dad would probably
+    laugh and tell me I've gone soft.
+  - ...I just need to make sure everyone's okay.
+  audioSource: {fileID: 684421541}
+  typeSoundClips:
+  - {fileID: 8300000, guid: f6f18522541cc444da381c55222b8641, type: 3}
+  - {fileID: 8300000, guid: b29656366f18fa14598a510d91237a85, type: 3}
+  - {fileID: 8300000, guid: 0064130a9157a984fad9cf1912001f2c, type: 3}
+  - {fileID: 8300000, guid: 8e71451d971ab7143868d87171620056, type: 3}
+  - {fileID: 8300000, guid: 06a609dfca634294082eeb4d54154557, type: 3}
+  - {fileID: 8300000, guid: 1fdaa4d1af8f7ed44862447bed8f9b6c, type: 3}
+  - {fileID: 8300000, guid: 89b53afe7dbec404f85bf1cdf758c18c, type: 3}
+  - {fileID: 8300000, guid: d13d3290c9e10c0419b855ab11e0a782, type: 3}
+  - {fileID: 8300000, guid: 0ed1945f98b506642aad8aab94bdc0e2, type: 3}
+  - {fileID: 8300000, guid: 58d71a284e9a75e439284a937537466e, type: 3}
+  minPitch: 0.95
+  maxPitch: 1.05
   typeSpeed: 0.03
   dateHoldTime: 5
   locationHoldTime: 3
@@ -1342,6 +1485,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 25367674}
+  - {fileID: 684421542}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1612920706
@@ -1642,7 +1786,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Skip
+  m_text: Continue
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e8a6c92d5cbd5754a9fa9b87e824ec20, type: 2}
   m_sharedMaterial: {fileID: -4373452850701733514, guid: e8a6c92d5cbd5754a9fa9b87e824ec20, type: 2}

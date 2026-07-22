@@ -1,3 +1,5 @@
+using System.Collections;
+using TMPro;
 using UnityEngine;
 
 public class FlashlightScript : MonoBehaviour, IToolPower
@@ -14,6 +16,13 @@ public class FlashlightScript : MonoBehaviour, IToolPower
     [Header("Drain Settings")]
     [SerializeField] private float drainRate = 5f;
 
+    [Header("First Equip Prompt Settings")]
+    [SerializeField] private float promptDuration = 4f;
+    [SerializeField] private float fadeDuration = 0.5f;
+    [SerializeField] private string keyboardTogglePrompt = "[Left Click] to toggle On/Off";
+    [SerializeField] private string xboxTogglePrompt = "Press [RB] to toggle On/Off";
+    [SerializeField] private string playStationTogglePrompt = "Press [RB] to toggle On/Off";
+
     private ToolClass toolData;
     private float currentPower;
     private float maxPower;
@@ -28,6 +37,13 @@ public class FlashlightScript : MonoBehaviour, IToolPower
     private bool isEquipped;
     private Color emissionStart;
 
+    private static bool hasShownTorchPromptOnce = false;
+
+    private Coroutine promptCoroutine;
+    private InputDeviceType currentDevice = InputDeviceType.KeyboardMouse;
+    private TMP_Text activePromptText;
+    private CanvasGroup activePromptCanvasGroup;
+
     public float CurrentPower => currentPower;
     public float MaxPower => maxPower;
     public bool UsesPower => toolData != null && toolData.usesPower;
@@ -40,7 +56,7 @@ public class FlashlightScript : MonoBehaviour, IToolPower
         currentPower = maxPower;
 
         isEquipped = true;
-        isOn = false;
+        isOn = true;
 
         SetupFlashlightAnchor();
         SpawnTorchLight();
@@ -49,7 +65,14 @@ public class FlashlightScript : MonoBehaviour, IToolPower
         if (glassRenderer != null)
         {
             emissionStart = glassRenderer.material.GetColor("_EmissionColor");
-            OffEmission();
+        }
+
+        TurnOnLightState();
+
+        if (!hasShownTorchPromptOnce)
+        {
+            hasShownTorchPromptOnce = true;
+            ShowFirstTimePrompt();
         }
     }
 
@@ -83,8 +106,6 @@ public class FlashlightScript : MonoBehaviour, IToolPower
             return;
         }
 
-        torchLight.enabled = false;
-
         if (lightCookie != null)
         {
             torchLight.cookie = lightCookie;
@@ -100,8 +121,96 @@ public class FlashlightScript : MonoBehaviour, IToolPower
         spawnedPlayerLightZone = Instantiate(playerLightZonePrefab, playerTransform);
         spawnedPlayerLightZone.transform.localPosition = new Vector3(0f, 1f, 0f);
         spawnedPlayerLightZone.transform.localRotation = Quaternion.identity;
+    }
 
-        spawnedPlayerLightZone.SetActive(false);
+    private void ShowFirstTimePrompt()
+    {
+        SimpleTutorialPromptManager promptManager = FindFirstObjectByType<SimpleTutorialPromptManager>();
+        if (promptManager != null)
+        {
+            activePromptText = promptManager.tutorialText;
+            activePromptCanvasGroup = promptManager.tutorialCanvasGroup;
+        }
+
+        if (InputDeviceDetector.Instance != null)
+        {
+            currentDevice = InputDeviceDetector.Instance.CurrentDevice;
+            InputDeviceDetector.Instance.OnDeviceChanged += HandleDeviceChanged;
+        }
+
+        if (promptCoroutine != null)
+        {
+            StopCoroutine(promptCoroutine);
+        }
+
+        promptCoroutine = StartCoroutine(DisplayPromptRoutine());
+    }
+
+    private IEnumerator DisplayPromptRoutine()
+    {
+        if (activePromptText != null && activePromptCanvasGroup != null)
+        {
+            activePromptText.text = GetDevicePromptString();
+
+            float timer = 0f;
+            float startAlpha = activePromptCanvasGroup.alpha;
+
+            while (timer < fadeDuration)
+            {
+                timer += Time.deltaTime;
+                activePromptCanvasGroup.alpha = Mathf.Lerp(startAlpha, 1f, timer / fadeDuration);
+                yield return null;
+            }
+
+            activePromptCanvasGroup.alpha = 1f;
+
+            yield return new WaitForSeconds(promptDuration);
+
+            timer = 0f;
+            while (timer < fadeDuration)
+            {
+                timer += Time.deltaTime;
+                activePromptCanvasGroup.alpha = Mathf.Lerp(1f, 0f, timer / fadeDuration);
+                yield return null;
+            }
+
+            activePromptCanvasGroup.alpha = 0f;
+            activePromptText.text = "";
+        }
+
+        UnsubscribeDeviceDetector();
+    }
+
+    private void HandleDeviceChanged(InputDeviceType newDevice)
+    {
+        currentDevice = newDevice;
+        if (activePromptText != null)
+        {
+            activePromptText.text = GetDevicePromptString();
+        }
+    }
+
+    private string GetDevicePromptString()
+    {
+        if (currentDevice == InputDeviceType.Xbox)
+        {
+            return xboxTogglePrompt;
+        }
+
+        if (currentDevice == InputDeviceType.PlayStation)
+        {
+            return playStationTogglePrompt;
+        }
+
+        return keyboardTogglePrompt;
+    }
+
+    private void UnsubscribeDeviceDetector()
+    {
+        if (InputDeviceDetector.Instance != null)
+        {
+            InputDeviceDetector.Instance.OnDeviceChanged -= HandleDeviceChanged;
+        }
     }
 
     public void Toggle()
@@ -117,81 +226,37 @@ public class FlashlightScript : MonoBehaviour, IToolPower
             torchClickSFX.Play();
         }
 
-        torchLight.enabled = isOn;
+        if (isOn)
+        {
+            TurnOnLightState();
+        }
+        else
+        {
+            TurnOffLightState();
+        }
+    }
+
+    private void TurnOnLightState()
+    {
+        if (torchLight != null)
+        {
+            torchLight.enabled = true;
+        }
 
         if (torchLightZone != null)
         {
-            torchLightZone.SetActive(isOn);
+            torchLightZone.SetActive(true);
         }
 
         if (spawnedPlayerLightZone != null)
         {
-            spawnedPlayerLightZone.SetActive(isOn);
+            spawnedPlayerLightZone.SetActive(true);
         }
-
-        if (!isOn)
-        {
-            OffEmission();
-        }
-    }
-
-    private void Update()
-    {
-        if (!isEquipped) return;
-        if (!isOn) return;
-
-        currentPower -= drainRate * Time.deltaTime;
-        currentPower = Mathf.Clamp(currentPower, 0f, maxPower);
 
         UpdateEmission();
-
-        if (currentPower <= 0f)
-        {
-            isOn = false;
-
-            if (torchLight != null)
-            {
-                torchLight.enabled = false;
-            }
-
-            if (torchLightZone != null)
-            {
-                torchLightZone.SetActive(false);
-            }
-
-            if (spawnedPlayerLightZone != null)
-            {
-                spawnedPlayerLightZone.SetActive(false);
-            }
-
-            OffEmission();
-        }
     }
 
-    private void OnEnable()
-    {
-        if (isOn && currentPower > 0f)
-        {
-            if (torchLight != null)
-            {
-                torchLight.enabled = true;
-            }
-
-            if (torchLightZone != null)
-            {
-                torchLightZone.SetActive(true);
-            }
-
-            if (spawnedPlayerLightZone != null)
-            {
-                spawnedPlayerLightZone.SetActive(true);
-            }
-
-            UpdateEmission();
-        }
-    }
-
-    private void OnDisable()
+    private void TurnOffLightState()
     {
         if (torchLight != null)
         {
@@ -211,8 +276,41 @@ public class FlashlightScript : MonoBehaviour, IToolPower
         OffEmission();
     }
 
+    private void Update()
+    {
+        if (!isEquipped) return;
+        if (!isOn) return;
+
+        currentPower -= drainRate * Time.deltaTime;
+        currentPower = Mathf.Clamp(currentPower, 0f, maxPower);
+
+        UpdateEmission();
+
+        if (currentPower <= 0f)
+        {
+            isOn = false;
+            TurnOffLightState();
+        }
+    }
+
+    private void OnEnable()
+    {
+        if (isOn && currentPower > 0f)
+        {
+            TurnOnLightState();
+        }
+    }
+
+    private void OnDisable()
+    {
+        TurnOffLightState();
+        UnsubscribeDeviceDetector();
+    }
+
     private void OnDestroy()
     {
+        UnsubscribeDeviceDetector();
+
         if (spawnedLightObject != null)
         {
             Destroy(spawnedLightObject);

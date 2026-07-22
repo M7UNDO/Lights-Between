@@ -2,13 +2,13 @@ using UnityEngine;
 
 public class StartingObjective : MonoBehaviour
 {
-    [SerializeField] private string startingObjective = "Investigate the light source";
+    [SerializeField] private string startingObjectiveID = "InvestigateLight";
 
     private void Start()
     {
         if (ObjectiveManager.Instance != null)
         {
-            ObjectiveManager.Instance.SetObjective(startingObjective);
+            ObjectiveManager.Instance.SetFirstObjective(startingObjectiveID);
         }
     }
 }

@@ -10,6 +10,9 @@ public class GameLoopManager : MonoBehaviour
     public static GameLoopManager Instance { get; private set; }
     public static bool IsGameEnded => Instance != null && !Instance.isGameActive;
 
+    [Header("UI Elements")]
+    [SerializeField] private GameObject playerHUD;
+
     [Header("Time System")]
     [SerializeField] private TextMeshProUGUI clockText;
     [SerializeField] private float realMinutesPerGameHour = 3f;
@@ -45,6 +48,11 @@ public class GameLoopManager : MonoBehaviour
         currentTimeInHours = 0f;
         isGameActive = true;
 
+        if (playerHUD != null)
+        {
+            playerHUD.SetActive(!SimpleTutorialPromptManager.IsTutorialActive);
+        }
+
         if (winPanel != null) winPanel.SetActive(false);
         if (gameOverPanel != null) gameOverPanel.SetActive(false);
 
@@ -68,6 +76,20 @@ public class GameLoopManager : MonoBehaviour
     private void Update()
     {
         if (!isGameActive) return;
+
+        if (SimpleTutorialPromptManager.IsTutorialActive)
+        {
+            if (playerHUD != null && playerHUD.activeSelf)
+            {
+                playerHUD.SetActive(false);
+            }
+            return;
+        }
+
+        if (playerHUD != null && !playerHUD.activeSelf)
+        {
+            playerHUD.SetActive(true);
+        }
 
         float realSecondsPerGameHour = realMinutesPerGameHour * 60f;
         float timeSpeedMultiplier = 1f / realSecondsPerGameHour;

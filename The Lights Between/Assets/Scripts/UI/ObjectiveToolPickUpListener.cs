@@ -6,6 +6,7 @@ public class ObjectiveToolPickupListener : MonoBehaviour
     [Header("References")]
     [SerializeField] private PlayerToolInventory inventory;
     [SerializeField] private ToolClass requiredTool;
+    [SerializeField] private PlayerTensionSystem tensionSystem;
 
     [Header("Objective Logic")]
     [SerializeField] private string objectiveToComplete;
@@ -18,6 +19,14 @@ public class ObjectiveToolPickupListener : MonoBehaviour
     [SerializeField] private UnityEvent onObjectiveCompleted;
 
     private bool hasCompleted;
+
+    private void Awake()
+    {
+        if (tensionSystem == null)
+        {
+            tensionSystem = FindFirstObjectByType<PlayerTensionSystem>();
+        }
+    }
 
     private void Update()
     {
@@ -49,6 +58,11 @@ public class ObjectiveToolPickupListener : MonoBehaviour
         else if (!string.IsNullOrEmpty(nextObjectiveToStart))
         {
             ObjectiveManager.Instance.SetObjective(nextObjectiveToStart);
+        }
+
+        if (tensionSystem != null)
+        {
+            tensionSystem.ActivateTensionSystem();
         }
 
         onObjectiveCompleted?.Invoke();
