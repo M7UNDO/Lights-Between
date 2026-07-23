@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 public enum CreatureScareType
 {
@@ -17,37 +18,19 @@ public class CreatureScareEvent
 
     [Header("Scare Type")]
     public CreatureScareType scareType;
-
-    [Header("Creature Position")]
     public Transform creaturePoint;
 
-    [Header("Viewing Trigger")]
+    [Header("Progression Triggers")]
     public GameObject viewingTriggerToActivate;
-
-    [Header("Response Triggers")]
     public GameObject[] responseTriggersToActivateAfterViewing;
 
     [Header("Creature Behaviour Rules")]
     public bool creatureCanReactToLight = true;
     public bool endScareWhenCreatureDisappears = true;
 
-    [Header("Optional Objects")]
-    public GameObject[] objectsToActivate;
-    public GameObject[] objectsToDeactivate;
-
-    [Header("Optional Chair Movement")]
-    public Transform chairTransform;
-    public Transform chairTargetPoint;
-
-    [Header("Optional Gramophone Event")]
-    public GramophoneController gramophoneController;
-
-    [Header("Optional Audio")]
-    public AudioSource audioSource;
-    public AudioClip scareSFX;
-
-    [Header("Optional Generator Power Cut")]
-    public bool turnGeneratorOff;
+    [Header("Custom Scene Events")]
+    public UnityEvent onScareStart;
+    public UnityEvent onScareEnd;
 }
 
 public class CreatureEventManager : MonoBehaviour
@@ -57,16 +40,12 @@ public class CreatureEventManager : MonoBehaviour
     [SerializeField] private GeneratorPowerSystem generatorPowerSystem;
     [SerializeField] private ElectricBoxBreaker electricBoxBreaker;
 
-    [Header("Generator Start Scares")]
+    [Header("Scare Collections")]
     [SerializeField] private CreatureScareEvent[] generatorStartScares;
-
-    [Header("Power Cut Scares")]
     [SerializeField] private CreatureScareEvent[] powerCutScares;
-
-    [Header("Manual Scares")]
     [SerializeField] private CreatureScareEvent[] manualScares;
 
-    [Header("Debug")]
+    [Header("Debug State")]
     [SerializeField] private int generatorStartCount;
     [SerializeField] private int powerCutCount;
     [SerializeField] private CreatureScareEvent activeScareEvent;
@@ -89,23 +68,10 @@ public class CreatureEventManager : MonoBehaviour
 
     public void OnGeneratorStarted()
     {
-        Debug.Log("Generator started event reached CreatureEventManager.");
-
         generatorStartCount++;
-
         int scareIndex = generatorStartCount - 1;
 
-        if (generatorStartScares == null)
-        {
-            Debug.LogWarning("Generator start scares array is missing.");
-            return;
-        }
-
-        if (scareIndex < 0 || scareIndex >= generatorStartScares.Length)
-        {
-            Debug.Log("No generator start scare assigned for start count: " + generatorStartCount);
-            return;
-        }
+        if (generatorStartScares == null || scareIndex < 0 || scareIndex >= generatorStartScares.Length) return;
 
         PlayScare(generatorStartScares[scareIndex]);
     }
@@ -123,14 +89,9 @@ public class CreatureEventManager : MonoBehaviour
             isPowerActive = generatorPowerSystem.IsPowerOn;
         }
 
-        if (!isPowerActive)
-        {
-            Debug.Log("Power cut triggered, but the power grid was already off. Skipping scare.");
-            return;
-        }
+        if (!isPowerActive) return;
 
         powerCutCount++;
-
         int scareIndex = powerCutCount - 1;
 
         if (powerCutScares != null && scareIndex >= 0 && scareIndex < powerCutScares.Length)
@@ -151,117 +112,59 @@ public class CreatureEventManager : MonoBehaviour
 
     public void PlayManualScareByIndex(int index)
     {
-        if (manualScares == null)
-        {
-            Debug.LogWarning("Manual scares array is missing.");
-            return;
-        }
-
-        if (index < 0 || index >= manualScares.Length)
-        {
-            Debug.LogWarning("Manual scare index is out of range: " + index);
-            return;
-        }
+        if (manualScares == null || index < 0 || index >= manualScares.Length) return;
 
         PlayScare(manualScares[index]);
     }
 
     public void ActivateCurrentScareResponseTriggers()
     {
-        if (activeScareEvent == null)
-        {
-            Debug.LogWarning("No active scare event. Cannot activate response triggers.");
-            return;
-        }
+        if (activeScareEvent == null) return;
 
         ActivateObject(activeScareEvent.viewingTriggerToActivate, false);
         ActivateObjects(activeScareEvent.responseTriggersToActivateAfterViewing);
-
-        Debug.Log("Activated response triggers for scare: " + activeScareEvent.scareName);
     }
 
     public void DisappearCreature()
     {
-        if (creatureAI == null)
+        if (creatureAI != null)
         {
-            Debug.LogWarning("CreatureAI is missing.");
-            return;
+            creatureAI.Disappear();
         }
-
-        creatureAI.Disappear();
     }
 
     public void DisappearCreatureAndDisable()
     {
-        if (creatureAI == null)
+        if (creatureAI != null)
         {
-            Debug.LogWarning("CreatureAI is missing.");
-            return;
+            creatureAI.DisappearAndDisable();
         }
-
-        creatureAI.DisappearAndDisable();
     }
 
     public void StartCreatureChaseFromCurrentPosition()
     {
-        if (creatureAI == null)
+        if (creatureAI != null)
         {
-            Debug.LogWarning("CreatureAI is missing.");
-            return;
+            creatureAI.StartChaseFromCurrentPosition();
         }
-
-        creatureAI.StartChaseFromCurrentPosition();
     }
 
     public void StopCreatureChaseAndHide()
     {
-        if (creatureAI == null)
+        if (creatureAI != null)
         {
-            Debug.LogWarning("CreatureAI is missing.");
-            return;
+            creatureAI.StopChaseAndHide();
         }
-
-        creatureAI.StopChaseAndHide();
     }
 
     private void PlayScare(CreatureScareEvent scareEvent)
     {
-        if (scareEvent == null)
-        {
-            Debug.LogWarning("Scare event is missing.");
-            return;
-        }
-
-        if (scareEvent.hasPlayed && scareEvent.disableAfterPlaying)
-        {
-            Debug.Log("Scare already played and is disabled: " + scareEvent.scareName);
-            return;
-        }
+        if (scareEvent == null) return;
+        if (scareEvent.hasPlayed && scareEvent.disableAfterPlaying) return;
 
         activeScareEvent = scareEvent;
 
-        ActivateObjects(scareEvent.objectsToActivate);
-        DeactivateObjects(scareEvent.objectsToDeactivate);
-
-        if (scareEvent.chairTransform != null && scareEvent.chairTargetPoint != null)
-        {
-            scareEvent.chairTransform.position = scareEvent.chairTargetPoint.position;
-            scareEvent.chairTransform.rotation = scareEvent.chairTargetPoint.rotation;
-        }
-
-        if (scareEvent.gramophoneController != null)
-        {
-            scareEvent.gramophoneController.PlayMusic();
-        }
-
         ActivateObject(scareEvent.viewingTriggerToActivate, true);
-
-        PlayScareAudio(scareEvent);
-
-        if (scareEvent.turnGeneratorOff && generatorPowerSystem != null)
-        {
-            generatorPowerSystem.TurnGeneratorOff();
-        }
 
         if (creatureAI != null && scareEvent.scareType != CreatureScareType.None)
         {
@@ -271,23 +174,19 @@ public class CreatureEventManager : MonoBehaviour
             {
                 creatureAI.RevealAtPoint(scareEvent.creaturePoint);
             }
-
-            if (scareEvent.scareType == CreatureScareType.Chase)
+            else if (scareEvent.scareType == CreatureScareType.Chase)
             {
                 creatureAI.StartChaseFromPoint(scareEvent.creaturePoint);
             }
         }
 
+        scareEvent.onScareStart?.Invoke();
         scareEvent.hasPlayed = true;
-
-        Debug.Log("Played Creature Scare: " + scareEvent.scareName);
     }
 
     private void HandleCreatureDisappeared()
     {
-        if (activeScareEvent == null) return;
-        if (!activeScareEvent.endScareWhenCreatureDisappears) return;
-
+        if (activeScareEvent == null || !activeScareEvent.endScareWhenCreatureDisappears) return;
         EndActiveScare();
     }
 
@@ -297,6 +196,8 @@ public class CreatureEventManager : MonoBehaviour
 
         ActivateObject(activeScareEvent.viewingTriggerToActivate, false);
         DeactivateObjects(activeScareEvent.responseTriggersToActivateAfterViewing);
+
+        activeScareEvent.onScareEnd?.Invoke();
         activeScareEvent = null;
     }
 
@@ -323,14 +224,6 @@ public class CreatureEventManager : MonoBehaviour
         if (obj != null)
         {
             obj.SetActive(state);
-        }
-    }
-
-    private void PlayScareAudio(CreatureScareEvent scareEvent)
-    {
-        if (scareEvent.audioSource != null && scareEvent.scareSFX != null)
-        {
-            scareEvent.audioSource.PlayOneShot(scareEvent.scareSFX);
         }
     }
 }

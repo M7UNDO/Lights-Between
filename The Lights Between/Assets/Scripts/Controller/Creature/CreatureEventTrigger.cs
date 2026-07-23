@@ -25,13 +25,9 @@ public class CreatureEventTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log(gameObject.name + " was entered by " + other.name);
-
         if (hasTriggered && onlyTriggerOnce) return;
 
-        bool isPlayer =
-            other.CompareTag("Player") ||
-            other.GetComponentInParent<PlayerInputHandler>() != null;
+        bool isPlayer = other.CompareTag("Player") || other.GetComponentInParent<PlayerInputHandler>() != null;
 
         if (!isPlayer) return;
 
@@ -41,43 +37,35 @@ public class CreatureEventTrigger : MonoBehaviour
             return;
         }
 
-        if (triggerAction == CreatureTriggerAction.PlayManualScare)
-        {
-            creatureEventManager.PlayManualScareByIndex(manualScareIndex);
-        }
-
-        if (triggerAction == CreatureTriggerAction.ActivateCurrentScareResponseTriggers)
-        {
-            creatureEventManager.ActivateCurrentScareResponseTriggers();
-        }
-
-        if (triggerAction == CreatureTriggerAction.DisappearCreature)
-        {
-            creatureEventManager.DisappearCreature();
-        }
-
-        if (triggerAction == CreatureTriggerAction.DisappearCreatureAndDisable)
-        {
-            creatureEventManager.DisappearCreatureAndDisable();
-        }
-
-        if (triggerAction == CreatureTriggerAction.StartChaseFromCurrentPosition)
-        {
-            creatureEventManager.StartCreatureChaseFromCurrentPosition();
-        }
-
-        if (triggerAction == CreatureTriggerAction.StopChaseAndHide)
-        {
-            creatureEventManager.StopCreatureChaseAndHide();
-        }
-
-        if (triggerAction == CreatureTriggerAction.TriggerPowerCut)
-        {
-            creatureEventManager.TriggerPowerCut();
-        }
-
+        ExecuteTriggerAction();
         hasTriggered = true;
+    }
 
-        Debug.Log("Creature trigger activated: " + triggerAction + " on " + gameObject.name);
+    private void ExecuteTriggerAction()
+    {
+        switch (triggerAction)
+        {
+            case CreatureTriggerAction.PlayManualScare:
+                creatureEventManager.PlayManualScareByIndex(manualScareIndex);
+                break;
+            case CreatureTriggerAction.ActivateCurrentScareResponseTriggers:
+                creatureEventManager.ActivateCurrentScareResponseTriggers();
+                break;
+            case CreatureTriggerAction.DisappearCreature:
+                creatureEventManager.DisappearCreature();
+                break;
+            case CreatureTriggerAction.DisappearCreatureAndDisable:
+                creatureEventManager.DisappearCreatureAndDisable();
+                break;
+            case CreatureTriggerAction.StartChaseFromCurrentPosition:
+                creatureEventManager.StartCreatureChaseFromCurrentPosition();
+                break;
+            case CreatureTriggerAction.StopChaseAndHide:
+                creatureEventManager.StopCreatureChaseAndHide();
+                break;
+            case CreatureTriggerAction.TriggerPowerCut:
+                creatureEventManager.TriggerPowerCut();
+                break;
+        }
     }
 }

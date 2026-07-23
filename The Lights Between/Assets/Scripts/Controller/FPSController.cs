@@ -126,6 +126,8 @@ public class FPSController : MonoBehaviour
         _controller = GetComponent<CharacterController>();
         _playerInput = GetComponent<PlayerInput>();
 
+        SetHUD();
+
         _jumpTimeoutDelta = JumpTimeout;
         _fallTimeoutDelta = FallTimeout;
     }
@@ -135,6 +137,13 @@ public class FPSController : MonoBehaviour
         if (SimpleTutorialPromptManager.IsTutorialActive || isInspecting || isInMiniGame || isJumpscareActive || GameLoopManager.IsGameEnded)
         {
             StopFootsteps();
+
+            if (hudCanvas != null && hudCanvas.gameObject.activeSelf)
+            {
+                hudCanvas.gameObject.SetActive(false);
+            }
+
+            SetHUD();
             return;
         }
 
@@ -159,6 +168,17 @@ public class FPSController : MonoBehaviour
     {
         Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z);
         Grounded = Physics.CheckSphere(spherePosition, GroundedRadius, GroundLayers, QueryTriggerInteraction.Ignore);
+    }
+
+    public void SetHUD()
+    {
+        if (SimpleTutorialPromptManager.IsTutorialActive)
+        {
+            if(hudCanvas.gameObject != null)
+            {
+                hudCanvas.gameObject.SetActive(!SimpleTutorialPromptManager.IsTutorialActive);
+            }
+        }
     }
 
     private void CameraRotation()

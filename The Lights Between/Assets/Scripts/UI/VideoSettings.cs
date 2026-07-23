@@ -320,8 +320,8 @@ public class VideoSettingsManager : MonoBehaviour
     public void ResetToDefaults()
     {
         currentDisplayModeIndex = 1; // Fullscreen
-        currentVSyncIndex = 0;       // Off
-        currentFramerateIndex = 3;   // Unlimited
+        currentVSyncIndex = 1;       // Off
+        currentFramerateIndex = 1;   // Unlimited
 
         for (int i = 0; i < resolutions.Length; i++)
         {
