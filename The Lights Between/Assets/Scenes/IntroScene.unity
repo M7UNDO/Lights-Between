@@ -1432,9 +1432,13 @@ MonoBehaviour:
   skipAction: {fileID: -1368742839032262552, guid: 735f955fc1960034e8e2c6885fc40fd7, type: 3}
   skipPromptObject: {fileID: 252807870}
   dateText: {fileID: 413639407}
+  actText: {fileID: 0}
   locationText: {fileID: 207969690}
   dialogueText: {fileID: 331412173}
   ellipsisText: {fileID: 469479249}
+  actTitle: '11 August 2004
+
+    11:13 AM'
   dateLine: '11 August 2004
 
     12:00 AM'

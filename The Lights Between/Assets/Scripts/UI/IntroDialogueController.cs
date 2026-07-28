@@ -11,11 +11,14 @@ public class IntroDialogueController : MonoBehaviour
 
     [Header("Text References")]
     [SerializeField] private TMP_Text dateText;
+    [SerializeField] private TMP_Text actText;
     [SerializeField] private TMP_Text locationText;
     [SerializeField] private TMP_Text dialogueText;
     [SerializeField] private TMP_Text ellipsisText;
 
     [Header("Dialogue")]
+    [TextArea(2, 4)]
+    [SerializeField] private string actTitle = "11 August 2004\n11:13 AM";
     [TextArea(2, 4)]
     [SerializeField] private string dateLine = "11 August 2004\n11:13 AM";
     [TextArea(2, 4)]
