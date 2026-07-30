@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class PlayerToolInventory : MonoBehaviour
@@ -16,6 +17,16 @@ public class PlayerToolInventory : MonoBehaviour
             acquiredTools.Add(tool);
             Debug.Log("Acquired tool: " + tool.toolName);
         }
+    }
+
+    public ToolClass GetToolByType(ToolType typeToGet)
+    {
+        return acquiredTools.Find(tool => tool != null && tool.toolType == typeToGet);
+    }
+
+    public bool HasToolType(ToolType typeToCheck)
+    {
+        return acquiredTools.Any(tool => tool != null && tool.toolType == typeToCheck);
     }
 
     public void RemoveTool(ToolClass tool)

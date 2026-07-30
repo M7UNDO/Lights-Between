@@ -113,9 +113,6 @@ public class MainManager : MonoBehaviour
 
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
-
-        if (InputDeviceDetector.Instance != null)
-            UpdateStartText(InputDeviceDetector.Instance.CurrentDevice);
     }
 
     private IEnumerator FlashStart()
@@ -155,9 +152,6 @@ public class MainManager : MonoBehaviour
 
         backInput.action.Enable();
         backInput.action.performed += OnBackPressed;
-
-        if (InputDeviceDetector.Instance != null)
-            InputDeviceDetector.Instance.OnDeviceChanged += OnDeviceChanged;
     }
 
     private void OnDisable()
@@ -167,32 +161,6 @@ public class MainManager : MonoBehaviour
 
         backInput.action.performed -= OnBackPressed;
         backInput.action.Disable();
-
-        if (InputDeviceDetector.Instance != null)
-            InputDeviceDetector.Instance.OnDeviceChanged -= OnDeviceChanged;
-    }
-
-    private void OnDeviceChanged(InputDeviceType type)
-    {
-        UpdateStartText(type);
-    }
-
-    private void UpdateStartText(InputDeviceType type)
-    {
-        switch (type)
-        {
-            case InputDeviceType.KeyboardMouse:
-                startText.text = "Press [Space or Left Click] to Start";
-                break;
-
-            case InputDeviceType.Xbox:
-                startText.text = "Press [A] to Start";
-                break;
-
-            case InputDeviceType.PlayStation:
-                startText.text = "Press [X] to Start";
-                break;
-        }
     }
 
     public void ResetMenuState()

@@ -476,7 +476,7 @@ public class FPSController : MonoBehaviour
                     {
                         basePrompt = item.InteractionPrompt;
                     }
-                    else if (hit.collider.TryGetComponent<ParaffinLampScript>(out ParaffinLampScript paraffinLamp))
+                    else if (hit.collider.TryGetComponent<KeroseneLampScript>(out KeroseneLampScript paraffinLamp))
                     {
                         basePrompt = "Paraffin Lamp";
                     }

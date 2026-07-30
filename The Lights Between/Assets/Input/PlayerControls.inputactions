@@ -647,17 +647,6 @@
                 },
                 {
                     "name": "",
-                    "id": "129e4c1c-e1e4-4208-aea4-cf864bf1b44e",
-                    "path": "<Mouse>/leftButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";KeyboardMouse",
-                    "action": "Start",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "16c20cfd-89d4-41ee-b670-f931be7be0da",
                     "path": "<Gamepad>/buttonSouth",
                     "interactions": "",

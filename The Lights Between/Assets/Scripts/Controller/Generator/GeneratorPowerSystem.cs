@@ -127,14 +127,30 @@ public class GeneratorPowerSystem : MonoBehaviour, IInteractable, IToolPower
 
         if (!hasFuel)
         {
-            if (playerEquipmentManager != null && playerEquipmentManager.CurrentTool != null && playerEquipmentManager.CurrentTool.toolType == ToolType.GeneratorFuel)
-            {
-                StartFuelMiniGame();
-            }
-            else
+            if (playerEquipmentManager == null || playerInventory == null)
             {
                 UpdatePrompt();
+                return;
             }
+
+            bool isHoldingFuel = playerEquipmentManager.CurrentTool != null &&
+                                playerEquipmentManager.CurrentTool.toolType == ToolType.GeneratorFuel;
+
+            if (isHoldingFuel)
+            {
+                StartFuelMiniGame();
+                return;
+            }
+
+            if (playerInventory.HasToolType(ToolType.GeneratorFuel))
+            {
+                ToolClass fuelTool = playerInventory.GetToolByType(ToolType.GeneratorFuel);
+                playerEquipmentManager.EquipTool(fuelTool);
+                StartFuelMiniGame();
+                return;
+            }
+
+            UpdatePrompt();
             return;
         }
 

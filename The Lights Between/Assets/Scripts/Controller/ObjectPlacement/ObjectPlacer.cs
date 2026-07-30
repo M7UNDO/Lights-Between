@@ -32,6 +32,9 @@ public class ObjectPlacer : MonoBehaviour
     private bool _validPreviewState = false;
     private ToolClass _activeToolToPlace = null;
 
+    [Header("SFX")]
+    public AudioClip placementSFX;
+
     private void Update()
     {
         if (_inPlacementMode)
@@ -126,6 +129,12 @@ public class ObjectPlacer : MonoBehaviour
 
         Quaternion rotation = Quaternion.Euler(0f, playerCamera.transform.eulerAngles.y, 0f);
         Instantiate(_activeToolToPlace.toolPrefab, _currentPlacementPosition, rotation);
+
+        if(placementSFX != null)
+        {
+            AudioSource.PlayClipAtPoint(placementSFX, _currentPlacementPosition);
+        }
+        
 
         if (inventory != null)
         {

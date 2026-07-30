@@ -7,7 +7,6 @@ using UnityEngine.EventSystems;
 public class TabController : MonoBehaviour
 {
     [Header("Tabs & Pages")]
-    [Tooltip("Leave this empty! It will automatically populate from children on Awake.")]
     [SerializeField] private Selectable[] tabButtons;
     [SerializeField] private GameObject[] pages;
 
