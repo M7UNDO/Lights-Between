@@ -16,6 +16,8 @@ MonoBehaviour:
   toolType: 0
   toolPrefab: {fileID: 9210824177669688466, guid: 76e1fdd363e39954f8deecf21ffc5723, type: 3}
   sprite: {fileID: 21300000, guid: 74efd2b274d3c714f8bbc6c9bc66a7e4, type: 3}
+  holdPointPositionOffset: {x: 0.4, y: -0.3, z: 0.6}
+  holdPointRotationOffset: {x: 0, y: 0, z: 0}
   usesPower: 1
   maxPower: 100
   fixedRadialSlotIndex: 0

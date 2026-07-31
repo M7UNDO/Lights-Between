@@ -15,6 +15,9 @@ public class ToolEquipmentManager : MonoBehaviour
     private FlashlightScript currentFlashlight;
     private PlayerInputHandler input;
 
+    private Vector3 defaultHoldPointPosition;
+    private Quaternion defaultHoldPointRotation;
+
     private Dictionary<ToolClass, GameObject> instantiatedTools = new Dictionary<ToolClass, GameObject>();
 
     public ToolClass CurrentTool => currentTool;
@@ -31,6 +34,12 @@ public class ToolEquipmentManager : MonoBehaviour
         if (toolUIManager == null)
         {
             toolUIManager = FindFirstObjectByType<ToolUIManager>();
+        }
+
+        if (toolHoldPoint != null)
+        {
+            defaultHoldPointPosition = toolHoldPoint.localPosition;
+            defaultHoldPointRotation = toolHoldPoint.localRotation;
         }
     }
 
@@ -78,9 +87,14 @@ public class ToolEquipmentManager : MonoBehaviour
             return;
         }
 
+        toolHoldPoint.localPosition = tool.holdPointPositionOffset;
+        toolHoldPoint.localRotation = Quaternion.Euler(tool.holdPointRotationOffset);
+
         if (instantiatedTools.TryGetValue(tool, out GameObject existingInstance))
         {
             currentToolInstance = existingInstance;
+            currentToolInstance.transform.localPosition = Vector3.zero;
+            currentToolInstance.transform.localRotation = Quaternion.identity;
             currentToolInstance.SetActive(true);
 
             currentFlashlight = currentToolInstance.GetComponentInChildren<FlashlightScript>();
@@ -118,6 +132,12 @@ public class ToolEquipmentManager : MonoBehaviour
         if (currentToolInstance != null)
         {
             currentToolInstance.SetActive(false);
+        }
+
+        if (toolHoldPoint != null)
+        {
+            toolHoldPoint.localPosition = defaultHoldPointPosition;
+            toolHoldPoint.localRotation = defaultHoldPointRotation;
         }
 
         currentToolInstance = null;

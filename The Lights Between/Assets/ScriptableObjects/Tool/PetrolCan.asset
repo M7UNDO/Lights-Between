@@ -14,8 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ToolClass
   toolName: Petrol Can
   toolType: 2
-  toolPrefab: {fileID: 1366728840615246, guid: 86163d1770fbaff47bad63dfc78a24b8, type: 3}
+  toolPrefab: {fileID: 6233012523828629082, guid: c96aa87fac2c4f9439e3e0f2d3e4c166, type: 3}
   sprite: {fileID: 21300000, guid: eb214e17e3d2c10478b1db16df43f6a7, type: 3}
+  holdPointPositionOffset: {x: 0.51, y: -0.54, z: 0.77}
+  holdPointRotationOffset: {x: -3.789, y: -88.835, z: -18.389}
   usesPower: 0
   maxPower: 100
   fixedRadialSlotIndex: 2
