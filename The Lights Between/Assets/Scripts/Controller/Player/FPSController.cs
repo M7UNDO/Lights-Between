@@ -76,6 +76,8 @@ public class FPSController : MonoBehaviour
     [SerializeField] private float sprintNoiseFrequency = 0.8f;
     [SerializeField] private float noiseBlendSpeed = 8f;
 
+    public Transform FlashlightAnchor;
+
     [Header("Cinemachine Settings")]
     public GameObject CinemachineCameraTarget;
     public float TopClamp = 90.0f;
@@ -103,6 +105,9 @@ public class FPSController : MonoBehaviour
     public bool isJumpscareActive;
 
     private float _footstepTimer;
+
+    public PlayerInputHandler InputHandler => _input;
+    public CharacterController Controller => _controller;
 
     private bool IsCurrentDeviceMouse
     {

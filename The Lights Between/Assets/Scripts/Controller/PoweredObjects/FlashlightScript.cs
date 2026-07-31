@@ -8,10 +8,25 @@ public class FlashlightScript : MonoBehaviour, IToolPower
     [SerializeField] private GameObject torchLightPrefab;
     [SerializeField] private AudioSource torchClickSFX;
     [SerializeField] private GameObject playerLightZonePrefab;
+    [SerializeField] private FPSController fpsController;
 
     [Header("Visuals")]
     [SerializeField] private Texture lightCookie;
     [SerializeField] private Renderer glassRenderer;
+
+    [Header("Lag & Tracking")]
+    [SerializeField] private float positionLagSpeed = 12f;
+    [SerializeField] private float rotationLagSpeed = 8f;
+
+    [Header("Mouse/Stick Sway Settings")]
+    [SerializeField] private float swayAmount = 1.5f;
+    [SerializeField] private float maxSwayAmount = 4f;
+    [SerializeField] private float swaySmoothness = 6f;
+
+    [Header("Movement Bobbing Settings")]
+    [SerializeField] private float walkBobSpeed = 10f;
+    [SerializeField] private float walkBobAmountX = 0.025f;
+    [SerializeField] private float walkBobAmountY = 0.025f;
 
     [Header("Drain Settings")]
     [SerializeField] private float drainRate = 5f;
@@ -36,6 +51,12 @@ public class FlashlightScript : MonoBehaviour, IToolPower
     private bool isOn;
     private bool isEquipped;
     private Color emissionStart;
+
+    private float bobTimer;
+    private Vector3 currentSwayOffset;
+
+    private PlayerInputHandler inputHandler;
+    private CharacterController characterController;
 
     private static bool hasShownTorchPromptOnce = false;
 
@@ -78,25 +99,42 @@ public class FlashlightScript : MonoBehaviour, IToolPower
 
     private void SetupFlashlightAnchor()
     {
-        GameObject anchorObject = GameObject.Find("PlayerCameraRoot");
+        if (fpsController == null)
+        {
+            fpsController = FindFirstObjectByType<FPSController>();
+        }
 
-        if (anchorObject != null)
+        if (fpsController != null)
         {
-            flashlightAnchor = anchorObject.transform;
+            inputHandler = fpsController.InputHandler;
+            characterController = fpsController.Controller;
+
+            if (fpsController.FlashlightAnchor != null)
+            {
+                flashlightAnchor = fpsController.FlashlightAnchor;
+            }
         }
-        else
+
+        /*if (flashlightAnchor == null)
         {
-            Debug.LogWarning("PlayerCameraRoot was not found. Torch light will stay on prefab.");
-        }
+            GameObject anchorObject = GameObject.Find("PlayerCameraRoot");
+
+            if (anchorObject != null)
+            {
+                flashlightAnchor = anchorObject.transform;
+            }
+            else
+            {
+                Debug.LogWarning("PlayerCameraRoot or CinemachineCameraTarget was not found.");
+            }
+        }*/
     }
 
     private void SpawnTorchLight()
     {
         if (torchLightPrefab == null || flashlightAnchor == null) return;
 
-        spawnedLightObject = Instantiate(torchLightPrefab, flashlightAnchor);
-        spawnedLightObject.transform.localPosition = Vector3.zero;
-        spawnedLightObject.transform.localRotation = Quaternion.identity;
+        spawnedLightObject = Instantiate(torchLightPrefab, flashlightAnchor.position, flashlightAnchor.rotation);
 
         torchLight = spawnedLightObject.GetComponentInChildren<Light>();
 
@@ -291,6 +329,70 @@ public class FlashlightScript : MonoBehaviour, IToolPower
             isOn = false;
             TurnOffLightState();
         }
+    }
+
+    private void LateUpdate()
+    {
+        if (spawnedLightObject == null || flashlightAnchor == null) return;
+
+        Vector3 targetPosition = flashlightAnchor.position + CalculateBobOffset();
+        Quaternion targetRotation = flashlightAnchor.rotation * CalculateSwayRotation();
+
+        spawnedLightObject.transform.position = Vector3.Lerp(
+            spawnedLightObject.transform.position,
+            targetPosition,
+            Time.deltaTime * positionLagSpeed
+        );
+
+        spawnedLightObject.transform.rotation = Quaternion.Slerp(
+            spawnedLightObject.transform.rotation,
+            targetRotation,
+            Time.deltaTime * rotationLagSpeed
+        );
+    }
+
+    private Vector3 CalculateBobOffset()
+    {
+        bool isMoving = false;
+
+        if (characterController != null)
+        {
+            Vector3 horizontalVelocity = new Vector3(characterController.velocity.x, 0f, characterController.velocity.z);
+            isMoving = characterController.isGrounded && horizontalVelocity.magnitude > 0.1f;
+        }
+
+        if (isMoving)
+        {
+            bobTimer += Time.deltaTime * walkBobSpeed;
+            float bobX = Mathf.Sin(bobTimer) * walkBobAmountX;
+            float bobY = Mathf.Cos(bobTimer * 2f) * walkBobAmountY;
+
+            return flashlightAnchor.right * bobX + flashlightAnchor.up * bobY;
+        }
+
+        bobTimer = 0f;
+        return Vector3.zero;
+    }
+
+    private Quaternion CalculateSwayRotation()
+    {
+        Vector2 lookInput = Vector2.zero;
+
+        if (inputHandler != null && !inputHandler.blockLookInput)
+        {
+            lookInput = inputHandler.look;
+        }
+
+        float swayX = lookInput.x * swayAmount;
+        float swayY = lookInput.y * swayAmount;
+
+        swayX = Mathf.Clamp(swayX, -maxSwayAmount, maxSwayAmount);
+        swayY = Mathf.Clamp(swayY, -maxSwayAmount, maxSwayAmount);
+
+        Vector3 targetSway = new Vector3(-swayY, swayX, 0f);
+        currentSwayOffset = Vector3.Lerp(currentSwayOffset, targetSway, Time.deltaTime * swaySmoothness);
+
+        return Quaternion.Euler(currentSwayOffset);
     }
 
     private void OnEnable()

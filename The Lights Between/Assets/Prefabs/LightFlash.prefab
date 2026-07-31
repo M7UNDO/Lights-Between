@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3721927798507014452}
   - component: {fileID: 2566010853541841942}
   m_Layer: 3
-  m_Name: Torch Light
+  m_Name: LightFlash
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -81,7 +81,7 @@ Light:
   m_RenderMode: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 16375
   m_RenderingLayerMask: 1
   m_Lightmapping: 4
   m_LightShadowCasterMode: 0

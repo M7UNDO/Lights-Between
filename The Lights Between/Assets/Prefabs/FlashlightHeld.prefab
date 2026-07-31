@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1027128532971079664}
   - component: {fileID: 6193896593649314918}
   - component: {fileID: 8445157186997079507}
-  m_Layer: 11
+  m_Layer: 14
   m_Name: TorchLightZone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -77,7 +77,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6661635755371837806}
   - component: {fileID: 4697222978933460642}
-  m_Layer: 13
+  m_Layer: 14
   m_Name: TorchSwitchSFX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -208,7 +208,7 @@ GameObject:
   - component: {fileID: 8418701464133213596}
   - component: {fileID: 945347877788744194}
   - component: {fileID: 121434216777929234}
-  m_Layer: 13
+  m_Layer: 14
   m_Name: Torch Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -350,7 +350,7 @@ GameObject:
   - component: {fileID: 7107268175080017924}
   - component: {fileID: 1633006248807380224}
   - component: {fileID: 8236463954874935145}
-  m_Layer: 13
+  m_Layer: 14
   m_Name: default
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -402,7 +402,7 @@ MeshRenderer:
   m_SmallMeshCulling: 1
   m_ForceMeshLod: -1
   m_MeshLodSelectionBias: 0
-  m_RenderingLayerMask: 1
+  m_RenderingLayerMask: 2
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 710d4d9447ac4b548b23dc0159a9c6c9, type: 2}
@@ -440,7 +440,7 @@ GameObject:
   - component: {fileID: 3728405653392027319}
   - component: {fileID: 8112322969564114974}
   - component: {fileID: 6112510975085335715}
-  m_Layer: 13
+  m_Layer: 14
   m_Name: FlashlightHeld
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -503,8 +503,17 @@ MonoBehaviour:
   torchLightPrefab: {fileID: 8170259245480476667, guid: cddc3c1aa23f15d488abb930a51648e1, type: 3}
   torchClickSFX: {fileID: 4697222978933460642}
   playerLightZonePrefab: {fileID: 1816056101602343757, guid: 5078a9a773a65fb4c9479b278671a3ce, type: 3}
+  fpsController: {fileID: 0}
   lightCookie: {fileID: 2800000, guid: 450d195e6a6eb4447a4ad8e358c7acfe, type: 3}
   glassRenderer: {fileID: 8236463954874935145}
+  positionLagSpeed: 12
+  rotationLagSpeed: 8
+  swayAmount: 1.5
+  maxSwayAmount: 4
+  swaySmoothness: 6
+  walkBobSpeed: 10
+  walkBobAmountX: 0.025
+  walkBobAmountY: 0.025
   drainRate: 0.33
   promptDuration: 4
   fadeDuration: 0.5
