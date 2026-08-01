@@ -10,8 +10,10 @@ public class InputTextPrompt : MonoBehaviour
     [TextArea]
     [SerializeField] private string formatTemplate = "Press {0} to Start";
 
-    [Header("Sprite Names (TMP Sprite Asset)")]
-    [SerializeField] private string keyboardSpriteName = "KB_Space";
+    [Header("Keyboard Text")]
+    [SerializeField] private string keyboardInputText = "[Space]";
+
+    [Header("Controller Sprite Names")]
     [SerializeField] private string xboxSpriteName = "Xbox_A";
     [SerializeField] private string playstationSpriteName = "PS_Cross";
 
@@ -38,24 +40,22 @@ public class InputTextPrompt : MonoBehaviour
 
     private void UpdatePromptText(InputDeviceType deviceType)
     {
-        string spriteName = GetSpriteNameForDevice(deviceType);
-        string spriteTag = string.IsNullOrEmpty(spriteName) ? string.Empty : $"<sprite name=\"{spriteName}\">";
-
-        textComponent.text = string.Format(formatTemplate, spriteTag);
+        string promptValue = GetPromptValueForDevice(deviceType);
+        textComponent.text = string.Format(formatTemplate, promptValue);
     }
 
-    private string GetSpriteNameForDevice(InputDeviceType deviceType)
+    private string GetPromptValueForDevice(InputDeviceType deviceType)
     {
         switch (deviceType)
         {
             case InputDeviceType.KeyboardMouse:
-                return keyboardSpriteName;
+                return keyboardInputText;
 
             case InputDeviceType.Xbox:
-                return xboxSpriteName;
+                return string.IsNullOrEmpty(xboxSpriteName) ? string.Empty : $"<sprite name=\"{xboxSpriteName}\">";
 
             case InputDeviceType.PlayStation:
-                return playstationSpriteName;
+                return string.IsNullOrEmpty(playstationSpriteName) ? string.Empty : $"<sprite name=\"{playstationSpriteName}\">";
 
             default:
                 return string.Empty;
