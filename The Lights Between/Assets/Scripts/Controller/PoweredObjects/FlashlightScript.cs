@@ -34,9 +34,12 @@ public class FlashlightScript : MonoBehaviour, IToolPower
     [Header("First Equip Prompt Settings")]
     [SerializeField] private float promptDuration = 4f;
     [SerializeField] private float fadeDuration = 0.5f;
-    [SerializeField] private string keyboardTogglePrompt = "[Left Click] to toggle On/Off";
-    [SerializeField] private string xboxTogglePrompt = "Press [RB] to toggle On/Off";
-    [SerializeField] private string playStationTogglePrompt = "Press [RB] to toggle On/Off";
+    [TextArea]
+    [SerializeField] private string keyboardTogglePrompt = "[F] to toggle On/Off";
+    [TextArea]
+    [SerializeField] private string xboxTogglePrompt = "Press <sprite name=\"Right Bumper\"> to toggle On/Off";
+    [TextArea]
+    [SerializeField] private string playStationTogglePrompt = "Press <sprite name=\"R1\"> to toggle On/Off";
 
     private ToolClass toolData;
     private float currentPower;
@@ -230,17 +233,17 @@ public class FlashlightScript : MonoBehaviour, IToolPower
 
     private string GetDevicePromptString()
     {
-        if (currentDevice == InputDeviceType.Xbox)
+        switch (currentDevice)
         {
-            return xboxTogglePrompt;
-        }
+            case InputDeviceType.Xbox:
+                return xboxTogglePrompt;
 
-        if (currentDevice == InputDeviceType.PlayStation)
-        {
-            return playStationTogglePrompt;
-        }
+            case InputDeviceType.PlayStation:
+                return playStationTogglePrompt;
 
-        return keyboardTogglePrompt;
+            default:
+                return keyboardTogglePrompt;
+        }
     }
 
     private void UnsubscribeDeviceDetector()

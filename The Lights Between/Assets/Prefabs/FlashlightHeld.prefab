@@ -517,7 +517,7 @@ MonoBehaviour:
   drainRate: 0.33
   promptDuration: 4
   fadeDuration: 0.5
-  keyboardTogglePrompt: '[Left Click] to toggle On/Off'
-  xboxTogglePrompt: Press [RB] to toggle On/Off
-  playStationTogglePrompt: Press [R1] to toggle On/Off
+  keyboardTogglePrompt: '[F] to toggle On/Off'
+  xboxTogglePrompt: Press <sprite name="Right Bumper"> to toggle On/Off
+  playStationTogglePrompt: Press <sprite name="R1"> to toggle On/Off
   torchLightZone: {fileID: 2558210924295630255}

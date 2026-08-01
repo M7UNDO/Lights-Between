@@ -22,21 +22,29 @@ public class SimpleTutorialPromptManager : MonoBehaviour
     [SerializeField] private float fadeDuration = 0.5f;
     [SerializeField] private float gapBetweenPrompts = 0.3f;
 
-    [Header("Keyboard Prompts")]
+    [Header("Keyboard Prompts (Text)")]
+    [TextArea]
     [SerializeField] private string keyboardMoveLookPrompt = "[WASD] Move\n[Mouse] Look";
+    [TextArea]
     [SerializeField] private string keyboardInteractPrompt = "[E] Interact";
+    [TextArea]
     [SerializeField] private string keyboardWheelPrompt = "Hold [TAB] + Move [Mouse]\nRelease [TAB] to equip item";
 
-    [Header("Xbox Prompts")]
-    [SerializeField] private string xboxMoveLookPrompt = "[Left Stick] Move\n[Right Stick] Look";
-    [SerializeField] private string xboxInteractPrompt = "[X] Interact";
-    [SerializeField] private string xboxWheelPrompt = "Hold [LB] + Move [Right Stick]\nRelease [LB] to equip item";
+    [Header("Xbox Prompts (Sprites)")]
+    [TextArea]
+    [SerializeField] private string xboxMoveLookPrompt = "<sprite name=\"Left Stick\"> Move\n<sprite name=\"Right Stick\"> Look";
+    [TextArea]
+    [SerializeField] private string xboxInteractPrompt = "<sprite name=\"X\"> Interact";
+    [TextArea]
+    [SerializeField] private string xboxWheelPrompt = "Hold <sprite name=\"Left Bumper\"> + Move <sprite name=\"Right Stick\">\nRelease <sprite name=\"Left Bumper\"> to equip item";
 
-    [Header("PlayStation Prompts")]
-    [SerializeField] private string playStationMoveLookPrompt = "[Left Stick] Move\n[Right Stick] Look";
-    [SerializeField] private string playStationInteractPrompt = "[Square] Interact";
-    [SerializeField] private string playStationWheelPrompt = "Hold [L1] + Move [Right Stick]\nRelease [L1] to equip item";
-
+    [Header("PlayStation Prompts (Sprites)")]
+    [TextArea]
+    [SerializeField] private string playStationMoveLookPrompt = "<sprite name=\"_Left Stick\"> Move\n<sprite name=\"_Right Stick\"> Look";
+    [TextArea]
+    [SerializeField] private string playStationInteractPrompt = "<sprite name=\"Square\"> Interact";
+    [TextArea]
+    [SerializeField] private string playStationWheelPrompt = "Hold <sprite name=\"L1\"> + Move <sprite name=\"_Right Stick\">\nRelease <sprite name=\"L1\"> to equip item";
     [Header("Tutorial Events")]
     [SerializeField] private UnityEvent onTutorialStart;
     [SerializeField] private UnityEvent onTutorialComplete;
@@ -213,66 +221,64 @@ public class SimpleTutorialPromptManager : MonoBehaviour
 
     private string GetPromptText(TutorialPromptType promptType)
     {
-        if (promptType == TutorialPromptType.MoveLook)
+        switch (promptType)
         {
-            return GetMoveLookPrompt();
-        }
+            case TutorialPromptType.MoveLook:
+                return GetMoveLookPrompt();
 
-        if (promptType == TutorialPromptType.Interact)
-        {
-            return GetInteractPrompt();
-        }
+            case TutorialPromptType.Interact:
+                return GetInteractPrompt();
 
-        if (promptType == TutorialPromptType.Wheel)
-        {
-            return GetWheelPrompt();
-        }
+            case TutorialPromptType.Wheel:
+                return GetWheelPrompt();
 
-        return "";
+            default:
+                return string.Empty;
+        }
     }
 
     private string GetMoveLookPrompt()
     {
-        if (currentDevice == InputDeviceType.Xbox)
+        switch (currentDevice)
         {
-            return xboxMoveLookPrompt;
-        }
+            case InputDeviceType.Xbox:
+                return xboxMoveLookPrompt;
 
-        if (currentDevice == InputDeviceType.PlayStation)
-        {
-            return playStationMoveLookPrompt;
-        }
+            case InputDeviceType.PlayStation:
+                return playStationMoveLookPrompt;
 
-        return keyboardMoveLookPrompt;
+            default:
+                return keyboardMoveLookPrompt;
+        }
     }
 
     private string GetInteractPrompt()
     {
-        if (currentDevice == InputDeviceType.Xbox)
+        switch (currentDevice)
         {
-            return xboxInteractPrompt;
-        }
+            case InputDeviceType.Xbox:
+                return xboxInteractPrompt;
 
-        if (currentDevice == InputDeviceType.PlayStation)
-        {
-            return playStationInteractPrompt;
-        }
+            case InputDeviceType.PlayStation:
+                return playStationInteractPrompt;
 
-        return keyboardInteractPrompt;
+            default:
+                return keyboardInteractPrompt;
+        }
     }
 
     private string GetWheelPrompt()
     {
-        if (currentDevice == InputDeviceType.Xbox)
+        switch (currentDevice)
         {
-            return xboxWheelPrompt;
-        }
+            case InputDeviceType.Xbox:
+                return xboxWheelPrompt;
 
-        if (currentDevice == InputDeviceType.PlayStation)
-        {
-            return playStationWheelPrompt;
-        }
+            case InputDeviceType.PlayStation:
+                return playStationWheelPrompt;
 
-        return keyboardWheelPrompt;
+            default:
+                return keyboardWheelPrompt;
+        }
     }
 }
