@@ -51,6 +51,7 @@ public class FPSController : MonoBehaviour
     public GameObject interactPrompt;
     [SerializeField] private TextMeshProUGUI interactText;
     private IInteractable currentInteractable;
+    private IKeyInventory _keyInventory;
 
     [Header("Jump Settings")]
     [Space(10)]
@@ -124,6 +125,8 @@ public class FPSController : MonoBehaviour
         {
             _mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
         }
+
+        _keyInventory = GetComponent<IKeyInventory>();
     }
 
     private void OnEnable()
@@ -467,6 +470,7 @@ public class FPSController : MonoBehaviour
                     }
                     else if (hit.collider.TryGetComponent<DoorScript>(out DoorScript doorScript))
                     {
+                        doorScript.UpdatePromptMessage(_keyInventory);
                         basePrompt = doorScript.promptMessage;
                     }
                     else if (hit.collider.TryGetComponent<ToolPickup>(out ToolPickup pickup))
@@ -559,7 +563,14 @@ public class FPSController : MonoBehaviour
                     objectOutline.enabled = false;
                 }
 
-                currentInteractable.Interact();
+                if (currentInteractable is DoorScript door)
+                {
+                    door.Interact(_keyInventory);
+                }
+                else
+                {
+                    currentInteractable.Interact();
+                }
 
                 if (currentInteractable is not GeneratorPowerSystem)
                 {
