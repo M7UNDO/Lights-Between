@@ -3,6 +3,8 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using TMPro;
+using UnityEngine.UI;
 
 public class PauseScript : MonoBehaviour
 {
@@ -18,6 +20,13 @@ public class PauseScript : MonoBehaviour
     [SerializeField] private GameObject pauseCanvas;
     [SerializeField] private GameObject pausePanel;
     [SerializeField] private GameObject settingsPanel;
+    [SerializeField] private GameObject confirmationPanel;
+
+
+    [Header("Confirmation Settings")]
+    public TextMeshProUGUI confirmationText;
+    private string confirmationMessage;
+    public Button confirmButton,cancelButton;
 
     [Header("Canvas Groups")]
     [Space(5)]
@@ -27,6 +36,7 @@ public class PauseScript : MonoBehaviour
     [Space(5)]
     [SerializeField] private GameObject pauseFirstSelected;
     [SerializeField] private GameObject settingsFirstSelected;
+    [SerializeField] private GameObject confirmFirstSelected;
 
     [Header("Scene Settings")]
     [Space(5)]
@@ -232,6 +242,53 @@ public class PauseScript : MonoBehaviour
         SimpleTutorialPromptManager.ResetTutorialSession();
         ForceResume();
         SceneManager.LoadScene(mainMenuSceneName);
+    }
+
+    public void ConfirmQuitGame()
+    {
+        RememberCurrentSelection();
+
+        if(confirmationPanel != null)
+        {
+            confirmationMessage = "Are you sure you want to exit the game?";
+            confirmationPanel.SetActive(true);
+
+            confirmButton.onClick.AddListener(QuitGame);
+            cancelButton.onClick.AddListener(CancelConfirmation);
+
+            confirmationText.text = confirmationMessage;
+            SetSelected(confirmFirstSelected);
+            if (pausePanel != null) pausePanel.SetActive(false);
+        }
+    }
+
+    public void ConfirmMainMenu()
+    {
+        RememberCurrentSelection();
+
+        if(confirmationPanel != null)
+        {
+            confirmationMessage = "Are you sure you want to exit to main menu?";
+            confirmationPanel.SetActive(true);
+
+            confirmButton.onClick.AddListener(LoadMainMenu);
+            cancelButton.onClick.AddListener(CancelConfirmation);
+
+            confirmationText.text = confirmationMessage;
+
+            SetSelected(confirmFirstSelected);
+            if (pausePanel != null) pausePanel.SetActive(false);
+        }
+    }
+
+    public void CancelConfirmation()
+    {
+        if (confirmationPanel != null)
+        {
+            confirmationPanel.SetActive(false);
+            if (pausePanel != null) pausePanel.SetActive(true);
+            RestorePreviousSelection();
+        }
     }
 
     public void QuitGame()

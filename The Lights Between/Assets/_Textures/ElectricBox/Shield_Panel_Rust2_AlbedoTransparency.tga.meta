@@ -94,5 +94,5 @@ AssetOrigin:
   productId: 118266
   packageName: Electrical shield
   packageVersion: 1.1
-  assetPath: Assets/Textures/Shield_Metall_rust_3/Shield_Panel_Rust2_AlbedoTransparency.tga
+  assetPath: Assets/_Textures/ElectricBox/Shield_Panel_Rust2_AlbedoTransparency.tga
   uploadId: 341234

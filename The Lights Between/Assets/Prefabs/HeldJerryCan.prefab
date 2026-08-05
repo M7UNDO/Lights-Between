@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 48018980945307731}
   - component: {fileID: 4419579460542999734}
   - component: {fileID: 3346676406547580888}
+  - component: {fileID: 4789609870181097218}
   m_Layer: 14
   m_Name: HeldJerryCan
   m_TagString: Untagged
@@ -113,3 +114,18 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 51d0948202d628f49bf41334aebef765, type: 3}
+--- !u!114 &4789609870181097218
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6233012523828629082}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a97258c640e15e46966be3d6aab1f52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::JerryCan
+  maxFuel: 100
+  currentFuel: 0
+  fuelDrain: 25
