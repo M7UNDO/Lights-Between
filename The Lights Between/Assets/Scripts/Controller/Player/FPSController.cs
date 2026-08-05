@@ -48,8 +48,8 @@ public class FPSController : MonoBehaviour
     public Canvas hudCanvas;
 
     public bool isInteracting;
-    public GameObject interactPrompt;
-    [SerializeField] private TextMeshProUGUI interactText;
+
+
     private IInteractable currentInteractable;
     private IKeyInventory _keyInventory;
 
@@ -460,7 +460,7 @@ public class FPSController : MonoBehaviour
                     isInteractable = true;
                 }
 
-                if (interactText != null)
+                /*if (interactText != null)
                 {
                     string basePrompt = "";
 
@@ -509,7 +509,7 @@ public class FPSController : MonoBehaviour
                     }
 
                     interactText.text = basePrompt;
-                }
+                }*/
 
                 objectOutline = hit.collider.GetComponent<Outline>() ?? hit.collider.GetComponentInChildren<Outline>();
 
@@ -532,18 +532,6 @@ public class FPSController : MonoBehaviour
         {
             Crosshair.gameObject.SetActive(showCrosshairs && !hasHoverInfo);
             InteractableCrosshair.gameObject.SetActive(showCrosshairs && hasHoverInfo);
-        }
-
-        if (interactPrompt != null)
-        {
-            GameObject input = interactPrompt.transform.GetChild(0).gameObject;
-
-            interactPrompt.SetActive(showCrosshairs && hasHoverInfo);
-
-            if (input != null)
-            {
-                input.SetActive(showCrosshairs && isInteractable);
-            }
         }
 
         if (objectOutline != null)
@@ -582,15 +570,8 @@ public class FPSController : MonoBehaviour
 
     public void ClearInteractionState()
     {
-        GameObject input = interactPrompt.transform.GetChild(0).gameObject;
         currentInteractable = null;
         isInteractable = false;
-
-        if (interactPrompt != null)
-        {
-            interactPrompt.SetActive(false);
-            input.SetActive(false);
-        }
 
         if (objectOutline != null)
         {

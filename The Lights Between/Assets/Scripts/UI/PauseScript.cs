@@ -22,11 +22,10 @@ public class PauseScript : MonoBehaviour
     [SerializeField] private GameObject settingsPanel;
     [SerializeField] private GameObject confirmationPanel;
 
-
     [Header("Confirmation Settings")]
-    public TextMeshProUGUI confirmationText;
-    private string confirmationMessage;
-    public Button confirmButton,cancelButton;
+    [SerializeField] private TextMeshProUGUI confirmationText;
+    [SerializeField] private Button confirmButton;
+    [SerializeField] private Button cancelButton;
 
     [Header("Canvas Groups")]
     [Space(5)]
@@ -136,6 +135,12 @@ public class PauseScript : MonoBehaviour
     {
         lastProcessedFrame = Time.frameCount;
 
+        if (confirmationPanel != null && confirmationPanel.activeSelf)
+        {
+            CancelConfirmation();
+            return;
+        }
+
         if (settingsPanel != null && settingsPanel.activeSelf)
         {
             if (tabController != null && tabController.TryGoBackToTab())
@@ -167,6 +172,7 @@ public class PauseScript : MonoBehaviour
         if (pauseCanvas != null) pauseCanvas.SetActive(true);
         if (pausePanel != null) pausePanel.SetActive(true);
         if (settingsPanel != null) settingsPanel.SetActive(false);
+        if (confirmationPanel != null) confirmationPanel.SetActive(false);
 
         SetPauseCanvasVisible(true);
         Cursor.visible = true;
@@ -192,6 +198,7 @@ public class PauseScript : MonoBehaviour
 
         if (pausePanel != null) pausePanel.SetActive(false);
         if (settingsPanel != null) settingsPanel.SetActive(false);
+        if (confirmationPanel != null) confirmationPanel.SetActive(false);
         if (pauseCanvas != null) pauseCanvas.SetActive(false);
 
         SetPauseCanvasVisible(false);
@@ -246,43 +253,50 @@ public class PauseScript : MonoBehaviour
 
     public void ConfirmQuitGame()
     {
-        RememberCurrentSelection();
-
-        if(confirmationPanel != null)
-        {
-            confirmationMessage = "Are you sure you want to exit the game?";
-            confirmationPanel.SetActive(true);
-
-            confirmButton.onClick.AddListener(QuitGame);
-            cancelButton.onClick.AddListener(CancelConfirmation);
-
-            confirmationText.text = confirmationMessage;
-            SetSelected(confirmFirstSelected);
-            if (pausePanel != null) pausePanel.SetActive(false);
-        }
+        OpenConfirmationModal("Are you sure you want to exit the game?", QuitGame);
     }
 
     public void ConfirmMainMenu()
     {
+        OpenConfirmationModal("Are you sure you want to exit to main menu?", LoadMainMenu);
+    }
+
+    private void OpenConfirmationModal(string message, UnityEngine.Events.UnityAction onConfirmAction)
+    {
         RememberCurrentSelection();
 
-        if(confirmationPanel != null)
+        if (confirmationPanel != null)
         {
-            confirmationMessage = "Are you sure you want to exit to main menu?";
+            if (pausePanel != null) pausePanel.SetActive(false);
+
             confirmationPanel.SetActive(true);
 
-            confirmButton.onClick.AddListener(LoadMainMenu);
-            cancelButton.onClick.AddListener(CancelConfirmation);
+            if (confirmationText != null)
+            {
+                confirmationText.text = message;
+            }
 
-            confirmationText.text = confirmationMessage;
+            if (confirmButton != null)
+            {
+                confirmButton.onClick.RemoveAllListeners();
+                confirmButton.onClick.AddListener(onConfirmAction);
+            }
+
+            if (cancelButton != null)
+            {
+                cancelButton.onClick.RemoveAllListeners();
+                cancelButton.onClick.AddListener(CancelConfirmation);
+            }
 
             SetSelected(confirmFirstSelected);
-            if (pausePanel != null) pausePanel.SetActive(false);
         }
     }
 
     public void CancelConfirmation()
     {
+        if (confirmButton != null) confirmButton.onClick.RemoveAllListeners();
+        if (cancelButton != null) cancelButton.onClick.RemoveAllListeners();
+
         if (confirmationPanel != null)
         {
             confirmationPanel.SetActive(false);
