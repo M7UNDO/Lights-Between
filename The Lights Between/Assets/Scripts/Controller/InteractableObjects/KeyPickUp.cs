@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class KeyPickUp : MonoBehaviour, IInteractable
 {
-    public string KeyID = "GarageKey";
+    public string KeyID = "Garage Key";
 
     [Header("SFX")]
 
