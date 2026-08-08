@@ -173,7 +173,7 @@ public class ElectricBoxBreaker : MonoBehaviour, IInteractable
 
     private void UpdatePromptMessage()
     {
-        promptMessage = isLeverUp ? "Pull Breaker Lever Down" : "Pull Breaker Lever Up";
+        promptMessage = isLeverUp ? "Pull down" : "Pull up";
     }
 
     private IEnumerator AnimateLever()

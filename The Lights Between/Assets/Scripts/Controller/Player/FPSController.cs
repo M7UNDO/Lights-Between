@@ -48,10 +48,9 @@ public class FPSController : MonoBehaviour
     public Canvas hudCanvas;
 
     public bool isInteracting;
-
-
     private IInteractable currentInteractable;
     private IKeyInventory _keyInventory;
+    private WorldSpaceInteractableUI _currentWorldUI;
 
     [Header("Jump Settings")]
     [Space(10)]
@@ -441,6 +440,7 @@ public class FPSController : MonoBehaviour
             objectOutline = null;
         }
 
+        WorldSpaceInteractableUI newWorldUI = null;
         currentInteractable = null;
         isInteractable = false;
 
@@ -460,56 +460,62 @@ public class FPSController : MonoBehaviour
                     isInteractable = true;
                 }
 
-                /*if (interactText != null)
+                string basePrompt = "";
+
+                if (hit.collider.TryGetComponent<Door>(out Door door))
                 {
-                    string basePrompt = "";
+                    basePrompt = door.promptMessage;
+                }
+                else if (hit.collider.TryGetComponent<DoorScript>(out DoorScript doorScript))
+                {
+                    doorScript.UpdatePromptMessage(_keyInventory);
+                    basePrompt = doorScript.promptMessage;
+                }
+                else if (hit.collider.TryGetComponent<ToolPickup>(out ToolPickup pickup))
+                {
+                    basePrompt = "Pick up";
+                }
+                else if (hit.collider.TryGetComponent<GeneratorPowerSystem>(out GeneratorPowerSystem generator))
+                {
+                    basePrompt = generator.promptMessage;
+                }
+                else if(hit.collider.TryGetComponent<ElectricBoxBreaker>(out ElectricBoxBreaker electricBox))
+                {
+                    basePrompt = electricBox.promptMessage;
+                }
+                else if (hit.collider.TryGetComponent<NarrativeInspectableItem>(out NarrativeInspectableItem item))
+                {
+                    basePrompt = item.InteractionPrompt;
+                }
+                else if (hit.collider.TryGetComponent<KeroseneLampScript>(out KeroseneLampScript paraffinLamp))
+                {
+                    basePrompt = "Paraffin Lamp";
+                }
+                else if (hasInteractable)
+                {
+                    basePrompt = "Interact";
+                }
 
-                    if (hit.collider.TryGetComponent<Door>(out Door door))
-                    {
-                        basePrompt = door.promptMessage;
-                    }
-                    else if (hit.collider.TryGetComponent<DoorScript>(out DoorScript doorScript))
-                    {
-                        doorScript.UpdatePromptMessage(_keyInventory);
-                        basePrompt = doorScript.promptMessage;
-                    }
-                    else if (hit.collider.TryGetComponent<ToolPickup>(out ToolPickup pickup))
-                    {
-                        basePrompt = "Pick up";
-                    }
-                    else if (hit.collider.TryGetComponent<GeneratorPowerSystem>(out GeneratorPowerSystem generator))
-                    {
-                        basePrompt = generator.promptMessage;
-                    }
-                    else if (hit.collider.TryGetComponent<NarrativeInspectableItem>(out NarrativeInspectableItem item))
-                    {
-                        basePrompt = item.InteractionPrompt;
-                    }
-                    else if (hit.collider.TryGetComponent<KeroseneLampScript>(out KeroseneLampScript paraffinLamp))
-                    {
-                        basePrompt = "Paraffin Lamp";
-                    }
-                    else if (hasInteractable)
-                    {
-                        basePrompt = "Interact";
-                    }
+                if (hasPower && powerItem.UsesPower)
+                {
+                    int powerPercent = Mathf.FloorToInt((powerItem.CurrentPower / powerItem.MaxPower) * 100f);
 
-                    if (hasPower && powerItem.UsesPower)
+                    if (!string.IsNullOrEmpty(basePrompt))
                     {
-                        int powerPercent = Mathf.FloorToInt((powerItem.CurrentPower / powerItem.MaxPower) * 100f);
-
-                        if (!string.IsNullOrEmpty(basePrompt))
-                        {
-                            basePrompt = $"{basePrompt} {powerPercent}%";
-                        }
-                        else
-                        {
-                            basePrompt = $"Paraffin Lamp {powerPercent}%";
-                        }
+                        basePrompt = $"{basePrompt} {powerPercent}%";
                     }
+                    else
+                    {
+                        basePrompt = $"Paraffin Lamp {powerPercent}%";
+                    }
+                }
 
-                    interactText.text = basePrompt;
-                }*/
+                newWorldUI = hit.collider.GetComponentInChildren<WorldSpaceInteractableUI>();
+
+                if (newWorldUI != null && !isInspecting && !isJumpscareActive)
+                {
+                    newWorldUI.ShowPrompt(basePrompt, isInteractable);
+                }
 
                 objectOutline = hit.collider.GetComponent<Outline>() ?? hit.collider.GetComponentInChildren<Outline>();
 
@@ -520,12 +526,18 @@ public class FPSController : MonoBehaviour
                 }
             }
         }
+
+        if (_currentWorldUI != null && _currentWorldUI != newWorldUI)
+        {
+            _currentWorldUI.HidePrompt();
+        }
+
+        _currentWorldUI = newWorldUI;
     }
 
     private void UpdateCrosshair()
     {
         bool showCrosshairs = !isInspecting && !isJumpscareActive;
-
         bool hasHoverInfo = isInteractable || (objectOutline != null);
 
         if (Crosshair != null && InteractableCrosshair != null)
@@ -572,6 +584,12 @@ public class FPSController : MonoBehaviour
     {
         currentInteractable = null;
         isInteractable = false;
+
+        if (_currentWorldUI != null)
+        {
+            _currentWorldUI.HidePrompt();
+            _currentWorldUI = null;
+        }
 
         if (objectOutline != null)
         {
